@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import {NavBar,Icon,Button,List,InputItem,Checkbox,WhiteSpace } from 'antd-mobile'
 import wx from 'weixin-js-sdk'
+import fetchJsonp from 'fetch-jsonp'
 class Recipien extends Component {
    constructor(props) {
    	  super(props)
@@ -74,11 +75,9 @@ class Recipien extends Component {
    }
    
    componentDidMount(){
-   	  this.loginFetch({user:'a1',pwd:'a1'}).then((res)=>{
-         console.log(res)
-      })
+   	  
       console.log(wx)
-      this.getAccessTokey().then((res)=>{console.log(res)})
+      //this.getAccessTokey().then((res)=>{console.log(res)})
    }
    loginFetch(data){
       return fetch(`http://172.28.0.203:8002/PDAService.asmx?op=Getusr_pda&${data.user}&${data.pwd}`
@@ -90,22 +89,21 @@ class Recipien extends Component {
    scanCodeFun(){
        console.log('点击扫码..')
        //this.getConfig()
-       this.wxInit({appId: '888888888',
-          timestamp:'888888888',
-          nonceStr: '888888888',
-          signature: 22})
+       this.getConfig()
    }
 
    getConfig() { 
         let url = location.href.split('#')[0] //获取锚点之前的链接
-        fetch(`/index.php?url=${url}`).then(response => {
-            let res = response.data;
+        fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
+            return res.json()
+        }).then(res => {
+            console.log(res)
             this.wxInit(res);
         })
    }
    getAccessTokey(){
-        return fetch('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid'
-        ).then((res)=>{
+        return fetch('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww58877fbb525792d1&corpsecret=wvaM2aIJsDBO586imwN8Fs1vmOmR2xBGNFs4PlgzS5I'
+        ,).then((res)=>{
             return res.json()
         })
    }
@@ -113,7 +111,7 @@ class Recipien extends Component {
       console.log('wx.config')
       wx.config({
           debug: true,
-          appId: res.appId,
+          appId: 'ww58877fbb525792d1',
           timestamp: res.timestamp,
           nonceStr: res.nonceStr,
           signature: res.signature,
@@ -125,7 +123,7 @@ class Recipien extends Component {
        wx.checkJsApi({
             jsApiList: ['scanQRCode'],
             success: function (res) {
-
+               console.log('checkJsApi success')
             }
         });
         wx.scanQRCode({

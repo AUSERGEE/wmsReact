@@ -35,7 +35,7 @@ class Login extends Component {
        console.log(this.props.userState)
        if(this.props.userState.loginTip){
           Toast.info('登录成功',1, null, true)
-          this.props.userLoginActions.userState({loginTip:false})
+          this.props.userLoginActions.changeLoginTip({loginTip:false})
        }
 
        

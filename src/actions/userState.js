@@ -5,5 +5,10 @@ const userState = (data) => {
         data
 	}
 }
-
-export {userState}
+const changeLoginTip = (data) => {
+	return {
+		type:'changeLoginTip',
+        data
+	}
+}
+export {userState,changeLoginTip}

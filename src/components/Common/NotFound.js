@@ -8,13 +8,15 @@ export default withRouter(class extends Component {
         return (
             <div className="pageNofind">
                 <div className="pageErrorTitle">404</div>
-                <p>抱歉，页面出错了！</p>
-                <Button type="primary" inline onClick={this.routerPush.bind(this)}>返回首页</Button>
+                <p  onClick={this.routerPush.bind(this)}>抱歉，页面出错了！</p>
+                <Button type="primary" inline onClick={()=>this.routerPush()}>返回首页</Button>
+
             </div>
         )
     }
 
     routerPush() {
-       this.props.history.push('/')
+        console.log('dsd')
+        this.props.history.push('/')
     }
 })
