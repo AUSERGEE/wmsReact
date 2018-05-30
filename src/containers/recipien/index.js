@@ -107,7 +107,7 @@ class Recipien extends Component {
    }
    wxInit(res) {
       wx.config({
-          debug: true,
+          debug: false,
           appId: 'ww58877fbb525792d1',
           timestamp: res.timestamp,
           nonceStr: res.nonceStr,
