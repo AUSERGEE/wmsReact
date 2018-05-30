@@ -1,0 +1,14 @@
+
+p.L_p{ height:52px; line-height: 52px; font-size:14px; border-bottom:1px solid #d3d3d3;padding-left:12px;}
+p.L_p .am-button{vertical-align:middle;}
+
+#tab-bar.demo {
+  display: flex;
+  flex-direction: column;
+}
+#tab-bar .demoName {
+  height: 40px;
+}
+#tab-bar .demo-preview-item .am-tab-bar {
+  background-color: white;
+}

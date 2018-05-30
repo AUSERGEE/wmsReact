@@ -1,0 +1,100 @@
+#tab-bar.demo { display: flex; flex-direction: column;
+}
+#tab-bar .demoName { height: 40px;}
+#tab-bar .demo-preview-item .am-tab-bar { background-color: white;}
+
+.listItem{ height: 90px;border-bottom: 1px solid #d3d3d3; }
+
+
+/**************登录页面*****************/
+@mixin bottomAfterSet {
+    right: 19px!important;
+    width: initial!important;
+}
+$font14:14px;
+
+@mixin titleClass {
+	font-size:$font14;
+	line-height: 26px;
+	margin-top:4px;
+    padding-left:4px;
+}
+
+.loginSection{
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	background:#FFF;
+	.am-list-body::before {
+		display:none!important;
+	}
+	.am-list-item:not(:last-child) .am-list-line::after{
+	    @include bottomAfterSet;
+	}
+	.am-list-body::after{
+		left: 19px!important;
+        @include bottomAfterSet;
+	}
+	.btnBox{
+		margin-top:16px;
+	}
+}
+
+
+@mixin fontSet($size,$lineHeight,$color,$weight:'normal',$align:'left') {
+    font-size: $size;
+    font-weight:$weight;
+    color:$color;
+    line-height: $lineHeight;
+    text-align:$align;
+}
+
+.sub-title{
+   @include titleClass
+}
+.pageErrorTitle{
+   @include fontSet(62px,122px,#0097e5,bold,center);
+}
+.pageNofind { text-align:center; padding-top:120px;}
+.pageNofind p{text-align:center;}
+.pageNofind a{margin-top:50px;}
+/**************简单的页面切换动画*已弃用*****************/
+.animate-route{
+  animation-duration:.6s;
+  animation-fill-mode: both;
+  animation-name: fadeRoute;
+}
+
+@keyframes fadeRoute {
+  from {
+    /*transform: translateX(100%);*/
+  }
+
+  to {
+    /*transform: translateX(0);*/
+  }
+}
+
+
+/**************其他*****************/
+.btnBox{ padding:10px 12px; }
+.bottomBar{position:fixed; bottom:0; left:0; right:0; height:62px; border-top:1px solid #dddddd; background:#FFF;}
+.btnGroup{margin:6px 12px 0px;}
+.inputRightBtn {
+   .am-list-item{
+    	.am-input-extra{
+    	  overflow: initial;
+    	}
+   }
+} 
+.checkboxAlign{
+	.am-checkbox-inner{
+		top:0px!important;
+	}
+} 
+.logoArea{width:160px; height:auto; margin:100px auto 20px;}
+.logoArea{
+   img{ width:100%; heigth:auto; }
+}
