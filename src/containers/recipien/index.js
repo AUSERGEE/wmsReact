@@ -87,7 +87,6 @@ class Recipien extends Component {
    }
    //扫码按钮事件函数
    scanCodeFun(){
-       console.log('点击扫码..')
        //this.getConfig()
        this.getConfig()
    }
@@ -97,7 +96,6 @@ class Recipien extends Component {
         fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
             return res.json()
         }).then(res => {
-            console.log(res)
             this.wxInit(res);
         })
    }
@@ -108,7 +106,6 @@ class Recipien extends Component {
         })
    }
    wxInit(res) {
-      console.log('wx.config')
       wx.config({
           debug: true,
           appId: 'ww58877fbb525792d1',
@@ -119,11 +116,9 @@ class Recipien extends Component {
      });
     
      wx.ready(function() {
-       console.log('wx.ready!!')
        wx.checkJsApi({
             jsApiList: ['scanQRCode'],
             success: function (res) {
-               console.log('checkJsApi success')
             }
         });
         wx.scanQRCode({
@@ -137,7 +132,7 @@ class Recipien extends Component {
 
      });
      wx.error(function(err) {
-        alert(JSON.stringify(err))
+        console.log(JSON.stringify(err))
      });
    }
 
