@@ -1,5 +1,5 @@
 
-let initUserState = {user:'',pwd:'',login:false,loginTip:false}
+let initUserState = {user:'',pwd:'',login:false,User_ScanerID:'',loginTip:false}
 const userState = (state = initUserState,action) => {
 	switch (action.type) {
 		case 'loginIn':

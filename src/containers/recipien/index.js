@@ -1,18 +1,23 @@
 import React,{Component} from 'react'
-import {NavBar,Icon,Button,List,InputItem,Checkbox,WhiteSpace } from 'antd-mobile'
+import {Modal,NavBar,Icon,Button,List,InputItem,Checkbox,WhiteSpace,Toast} from 'antd-mobile'
 import wx from 'weixin-js-sdk'
 import fetchJsonp from 'fetch-jsonp'
+import wxConfig from '../../util/wxConfig'
+import * as tools from '../../util/tools'
+const prompt = Modal.prompt
 class Recipien extends Component {
    constructor(props) {
    	  super(props)
    	  this.state = {
-        num:222,
-   	    intitStorge:111,
-        text:'闪电似的送',
-        poVal:'31233333',
-        matail:'dsd',
-        org:'dsdsd',
-        checkStorge:false
+        orderId:'1212213323232',
+        num:null,
+   	    intitStorge:null,
+        text:'',
+        poVal:'',
+        matail:'',
+        org:'',
+        checkStorge:false,
+        scanCodeType:1
    	  }
    }
    
@@ -26,6 +31,10 @@ class Recipien extends Component {
             </NavBar>
             <WhiteSpace/>
             <List >
+             <InputItem
+                 editable={false}
+                 value={this.state.orderId}
+              >收货单号</InputItem>
               <InputItem
                  editable={false}
                  value={this.state.num}
@@ -35,17 +44,30 @@ class Recipien extends Component {
                  value={this.state.intitStorge}
                  onChange={val=>this.setState({intitStorge:val})}
               >默认储位</InputItem>
+              <Item className="checkboxAlign">
+                 <div className="checkWarp">
+                    <div className="checkItem">
+                        扫描储位<AgreeItem style={{display:'inline-block',height:'22px',lineHeight:'22px',padding:'0px'}} data-seed="logId"
+                        onChange={e => this.setState({checkStorge:!this.state.checkStorge})} />
+                    </div>
+                    <div className="checkItem">
+                        超收 <AgreeItem style={{display:'inline-block',height:'22px',lineHeight:'22px',padding:'0px'}} data-seed="logId"
+                        />
+                    </div>
+                  </div>
+              </Item>
               <div className="inputRightBtn">
                     <InputItem
                        editable={true}
-                       value={this.state.text}
+                       value={this.state.checkStorge?this.state.intitStorge:this.state.text}
                        onChange={val=>this.setState({text:val})}
+                       onFocus={()=>{this.setState({scanCodeType:2})}}
+                       onBlur={()=>{this.setState({scanCodeType:1})}}
+                       placeholder={this.state.scanCodeType==2?'请点击扫码按钮扫描条码':''}
                        extra={<Button type="primary" size="small" style={{marginTop:'-6px'}}>保存</Button>}
                     ></InputItem>
               </div>
-              <Item className="checkboxAlign">
-                 扫描储位<AgreeItem style={{display:'inline-block',height:'22px',lineHeight:'22px',padding:'0px'}} data-seed="logId" onChange={e => console.log('checkbox', e)} />
-              </Item>
+              
               <InputItem
                  editable={false}
                  value={this.state.poVal}
@@ -62,9 +84,10 @@ class Recipien extends Component {
                  onChange={val=>this.setState({org:val})}
               >供应商</InputItem>
             </List>
+            
             <div className="bottomBar">
                <div className="btnGroup">
-                   <Button type="primary" inline style={{ marginRight: '2%',width:'40%'}}>收货查看</Button>
+                   <Button type="primary" inline style={{ marginRight: '2%',width:'40%'}} onClick={()=>this.props.history.push('/RecipienDtl')}>收货查看</Button>
                    <Button type="primary" inline style={{ marginRight: '2%',width:'28%'}}>清除</Button>
                    <Button type="primary" inline style={{ width:'28%'}} onClick={this.scanCodeFun.bind(this)}>扫码</Button>
                 </div>
@@ -75,10 +98,14 @@ class Recipien extends Component {
    }
    
    componentDidMount(){
-   	  
-      console.log(wx)
       //this.getAccessTokey().then((res)=>{console.log(res)})
-   }
+      //this.antd_prompt()
+      //wxConfig()
+      console.log(this.props)
+      this.getOrderId()
+      //this.getFormInfo('32176790_%26_4500-783152-0S00_%26_JS068_%26_3000_%26_783152_%26_*_%26_60000_%26_2017-03-17')
+      //this.getStorge('CK372')
+    }
    loginFetch(data){
       return fetch(`http://172.28.0.203:8002/PDAService.asmx?op=Getusr_pda&${data.user}&${data.pwd}`
       ).then((res)=>{
@@ -93,10 +120,16 @@ class Recipien extends Component {
 
    getConfig() { 
         let url = location.href.split('#')[0] //获取锚点之前的链接
-        fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
+        this.loadingToast('loading...')
+        fetch(`http://wmspda.skyworthdigital.com:9009/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
             return res.json()
         }).then(res => {
+            Toast.hide()
             this.wxInit(res);
+        }).catch(e=>{
+            console.log(e)
+            Toast.hide()
+            Toast.fail('调用扫码功能遇到了错误', 1);
         })
    }
    getAccessTokey(){
@@ -123,10 +156,19 @@ class Recipien extends Component {
         });
         wx.scanQRCode({
             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-            scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
+            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
             success: function (res) {
                 var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                 alert("扫描结果："+result);
+                if(this.state.scanCodeType==1){
+                   let barCode=result.replace(/&/g,'%26')
+                   this.getFormInfo(barCode)
+                   alert('扫的是二维码')
+                }else{
+                    this.getStorge(result)
+                    alert('扫的是条码')
+                }
+                
             }
         });
 
@@ -136,7 +178,95 @@ class Recipien extends Component {
      });
    }
 
+   getFormInfo(barCode){
+      let formData = new FormData()
+      formData.append("barCode",barCode)
+      formData.append("checkreceive",false)
+      formData.append("ScanStatus",1)
+      let params={
+        "barCode":barCode
+      }
+      let url='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/ScanDataDealBarCode'
+      let url2=`${url}?barCode=${barCode}&checkreceive=false&ScanStatus=1`
+      let url3='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/ScanDataDealBarCodeTest'
+
+
+      
+      fetch(`${url2}`,{
+            method:"GET",   //请求方法
+      }).then((res)=>{
+            return res.json()
+      }).then((res)=>{
+            if(res.MessageResult.IsSuccess){
+                let ReceivingQuantity=res.ReceivementDetail.ReceivingQuantity
+                this.setState({
+                    intitStorge:res.MaterialInfo.spCode,
+                    poVal:res.ReceivementDetail.PO,
+                    matail:res.ReceivementDetail.MaterialCode,
+                    org:res.Receivement.SupplierCode,
+                    num:ReceivingQuantity
+                })
+                prompt('确认数量', '请输入数量', [
+                    { text: '取消' },
+                { text: '确定', onPress: value => {
+                        this.setState({
+                            num:value
+                        })
+                } },
+                ], 'default', ReceivingQuantity)
+
+            }else{
+                Toast.fail(res.MessageResult.ErrorMessage?res.MessageResult.ErrorMessage:'error', 2);
+            }
+            
+            
+      }).catch((e)=>{
+         Toast.fail('扫码解析请求遇到了错误', 2);
+      })
+
+   }
+   getOrderId(){
+       let url='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetOrCreateReceiveNumber'
+       fetch(url+`?userCode="A1"`).then((res)=>{
+           return res.json()
+       }).then((res)=>{
+           console.log(res)
+           this.setState({
+               orderId:res.ReceivingNumber
+           })
+       })
+   }
+   getStorge(ScanDataDealSpCode){
+       let url='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/ScanDataDealSpCode'
+       fetch(url+`?barCode=${ScanDataDealSpCode}&checkreceive=false&ScanStatus=1`).then((res)=>{
+           return res.json()
+       }).then((res)=>{
+           
+           if(res.MessageResult.IsSuccess){
+
+               console.log(res)
+               this.setState({
+                 text:res.ReceivementDetail.spCode                
+               })
+           }else{
+              Toast.fail(res.MessageResult.ErrorMessage?res.MessageResult.ErrorMessage:'error', 2);
+           }
+       }).catch((e)=>{
+            Toast.fail('扫码解析请求遇到了错误', 2);
+       })
+   }
+   antd_prompt(){
+    prompt('defaultValue', 'defaultValue for prompt', [
+        { text: 'Cancel' },
+        { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },
+      ], 'default', '100')
+    }
+
+    loadingToast(txt) {
+        Toast.loading(txt,0);
+    }
 }
+
 
 const Item = List.Item;
 const AgreeItem = Checkbox.AgreeItem;

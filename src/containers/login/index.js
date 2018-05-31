@@ -81,8 +81,9 @@ class Login extends Component {
       let userInfo={user:this.state.user,pwd:this.state.pwd,login:true,loginTip:true}
       this.loadingToast('登录中..')
       this.loginFetch(userInfo).then((res)=>{
-          if(res.IsSuccess){   //登录成功后
+          if(res.messageResult.IsSuccess){   //登录成功后
             Toast.hide()
+            userInfo.User_ScanerID=res.UserInfo.User_ScanerID
             this.props.userLoginActions.userState(userInfo)  //vuex
             setItem('user',JSON.stringify(userInfo))   //localstorge
             this.props.history.push('/')

@@ -17,13 +17,15 @@ class Login extends Component {
       return (
       	<div>
            <NavBar mode="dark">WMS</NavBar>
-      	 	   <p>
+      	 	<div>
 
                  <div className="sub-title">当前帐号</div>
                  <List >
-                  <Item extra={<span style={{color:"#0097e5"}} onClick={this.logout.bind(this)}>退出</span>}>{this.props.userState.user}</Item>
+                  <Item extra={
+                         <span style={{color:"#0097e5"}} onClick={this.logout.bind(this)}>退出</span>
+                     }>{this.props.userState.user}({this.props.userState.User_ScanerID})</Item>
                 </List>
-             </p>
+             </div>
              <div className="sub-title">功能列表 </div>
              <Grid data={operateArr} columnNum={3} onClick={this.gridLink.bind(this)}/>
         </div>

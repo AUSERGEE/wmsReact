@@ -16,6 +16,7 @@ export default withRouter(class extends Component {
     }
 
     routerPush() {
+        
         console.log('dsd')
         this.props.history.push('/')
     }

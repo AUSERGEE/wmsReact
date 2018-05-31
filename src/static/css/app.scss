@@ -77,6 +77,22 @@ $font14:14px;
   }
 }
 
+/**********************************/
+.wmsTb{
+   margin:10px 12px;	
+}
+.tbHeader{
+	height:32px;
+	line-height:32px;
+	background:#108ee9;
+	color:#FFFFFF;
+}
+.flex2{
+    -webkit-box-flex: 2!important;
+    -webkit-flex: 2!important;
+    -ms-flex: 2!important;
+    flex: 2!important;
+}
 
 /**************其他*****************/
 .btnBox{ padding:10px 12px; }
@@ -97,4 +113,10 @@ $font14:14px;
 .logoArea{width:160px; height:auto; margin:100px auto 20px;}
 .logoArea{
    img{ width:100%; heigth:auto; }
+}
+
+
+.checkItem{
+	display:inline-block;
+	margin-right:32px;
 }
