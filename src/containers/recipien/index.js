@@ -121,7 +121,7 @@ class Recipien extends Component {
    getConfig() { 
         let url = location.href.split('#')[0] //获取锚点之前的链接
         this.loadingToast('loading...')
-        fetch(`http://wmspda.skyworthdigital.com:9009/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
+        fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
             return res.json()
         }).then(res => {
             Toast.hide()
@@ -158,6 +158,7 @@ class Recipien extends Component {
             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
             scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
             success: function (res) {
+                alert(JSON.stringify(res))
                 var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                 alert("扫描结果："+result);
                 if(this.state.scanCodeType==1){
