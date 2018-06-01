@@ -103,8 +103,11 @@ class Recipien extends Component {
       //wxConfig()
       console.log(this.props)
       this.getOrderId()
-      //this.getFormInfo('32176790_%26_4500-783152-0S00_%26_JS068_%26_3000_%26_783152_%26_*_%26_60000_%26_2017-03-17')
+      let result='32176790_&_4500-783152-0S00_&_JS068_&_3000_&_783152_%26_*_&_60000_&_2017-03-17'
+      let barCode=result.replace(/&/g,'%26')
+      this.getFormInfo(barCode)
       //this.getStorge('CK372')
+      if(this.state.scanCodeType==1){alert('dddd')}
     }
    loginFetch(data){
       return fetch(`http://172.28.0.203:8002/PDAService.asmx?op=Getusr_pda&${data.user}&${data.pwd}`
@@ -161,10 +164,13 @@ class Recipien extends Component {
                 alert(JSON.stringify(res))
                 var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                 alert("扫描结果："+result);
+                console.log('this.state.scanCodeType:'+this.state.scanCodeType)
                 if(this.state.scanCodeType==1){
+                   console.log('001')
                    let barCode=result.replace(/&/g,'%26')
+                   console.log(barCode)
                    this.getFormInfo(barCode)
-                   alert('扫的是二维码')
+                   console.log('扫的是二维码')
                 }else{
                     this.getStorge(result)
                     alert('扫的是条码')
@@ -180,6 +186,7 @@ class Recipien extends Component {
    }
 
    getFormInfo(barCode){
+      console.log('002:in the getFormInfo(barCode)')
       let formData = new FormData()
       formData.append("barCode",barCode)
       formData.append("checkreceive",false)
@@ -192,12 +199,13 @@ class Recipien extends Component {
       let url3='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/ScanDataDealBarCodeTest'
 
 
-      
+      console.log('003:before fetch')
       fetch(`${url2}`,{
             method:"GET",   //请求方法
       }).then((res)=>{
             return res.json()
       }).then((res)=>{
+             console.log('004:')
             if(res.MessageResult.IsSuccess){
                 let ReceivingQuantity=res.ReceivementDetail.ReceivingQuantity
                 this.setState({

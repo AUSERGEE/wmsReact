@@ -17,10 +17,12 @@ import AuthRoute from  './containers/AuthRoute'
 import HomePage from './containers/homePage'
 import Recipien from './containers/recipien'
 import RecipienDtl from './containers/recipienDtl'
-
+import Vconsole from 'vconsole'
 import './static/css/app.scss'
 initReactFastclick()
-
+if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+   let vConsole = new Vconsole()
+}
 class Root extends Component {
     
 	render() {
