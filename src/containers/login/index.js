@@ -11,7 +11,8 @@ class Login extends Component {
    	  	user:'',
    	  	pwd:'',
    	  	modal1:false,
-   	  	msg:''
+        msg:'',
+        formActive:null 
    	  }
    }
    
@@ -25,16 +26,22 @@ class Login extends Component {
 	         <List >
 	          <InputItem
 	            clear
-	            placeholder="请在此填写帐号"
-	            ref={el => this.autoFocusInst = el}
-	            onChange={val=>this.handleChange('user',val)}
+              placeholder="请在此填写帐号"
+              className={this.state.formActive=='user'?'formActive':''}
+              ref={el => this.autoFocusInst = el}
+              value={this.state.user}
+              onChange={val=>this.handleChange('user',val)}
+              onFocus={()=>{this.setState({formActive:'user'})}}
 	          >帐号</InputItem>
 	          <InputItem
 	            clear
 	            placeholder="请在此填写密码"
               type="password"
-	            ref={el => this.autoFocusInst = el}
-	            onChange={val=>this.handleChange('pwd',val)}
+              className={this.state.formActive=='pwd'?'formActive':''}
+              ref={el => this.autoFocusInst = el}
+              value={this.state.pwd}
+              onChange={val=>this.handleChange('pwd',val)}
+              onFocus={()=>{this.setState({formActive:'pwd'})}}
 	          >密码</InputItem>
 	         
 	        </List>
@@ -73,7 +80,7 @@ class Login extends Component {
    	  if(this.state.user==''){
    	  	this.magAlert('帐号不能为空！')
    	  	return
-   	  }else if(this.state.user==''){
+   	  }else if(this.state.pwd==''){
    	  	this.magAlert('密码不能为空！')
    	  	return
    	  }
@@ -104,7 +111,7 @@ class Login extends Component {
    }
    //antd-loading封装
    loadingToast(txt) {
-      Toast.loading(txt||'loading..', 6, () => {
+      Toast.loading(txt||'loading..', 0, () => {
       });
     }
   //antd-对话框封装

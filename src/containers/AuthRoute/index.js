@@ -19,10 +19,9 @@ class AuthRoute extends Component {
    componentDidMount(){
       let userInfo=getItem('user')
       let json_userInfo=userInfo?JSON.parse(userInfo):''
-      
       //刷新页面后如果有用户信息的缓存，那么存起来
       //如果没有，说明没有登录，直接跳转到登录页面
-      if(json_userInfo.login){
+      if(json_userInfo.user){
          json_userInfo.loginTip = false
          this.props.userLoginActions.userState(json_userInfo)
       }else{

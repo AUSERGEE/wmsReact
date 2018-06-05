@@ -9,7 +9,8 @@
 /**************登录页面*****************/
 @mixin bottomAfterSet {
     right: 19px!important;
-    width: initial!important;
+	width: initial!important;
+	/*background-color: #848484!important;*/
 }
 $font14:14px;
 
@@ -27,6 +28,7 @@ $font14:14px;
 	left:0;
 	right:0;
 	background:#FFF;
+	.am-list-body{border-top:0px solid #ddd!important;}
 	.am-list-body::before {
 		display:none!important;
 	}
@@ -36,6 +38,9 @@ $font14:14px;
 	.am-list-body::after{
 		left: 19px!important;
         @include bottomAfterSet;
+	}
+	.formActive .am-list-item::after{
+		background:#0097e5;
 	}
 	.btnBox{
 		margin-top:16px;
@@ -84,8 +89,20 @@ $font14:14px;
 .tbHeader{
 	height:32px;
 	line-height:32px;
-	background:#108ee9;
+	background:#a9a9a9;
 	color:#FFFFFF;
+}
+.wmsTb_Tbody .tb_tr:nth-child(odd){
+	height:28px;
+	line-height:28px;
+	background:#FFFFFF;
+	color:#666666;
+}
+.wmsTb_Tbody .tb_tr:nth-child(even){
+	height:28px;
+	line-height:28px;
+	background:rgb(238, 238, 238);
+	color:#666666;
 }
 .flex2{
     -webkit-box-flex: 2!important;
@@ -96,8 +113,15 @@ $font14:14px;
 
 /**************其他*****************/
 .btnBox{ padding:10px 12px; }
-.bottomBar{position:fixed; bottom:0; left:0; right:0; height:62px; border-top:1px solid #dddddd; background:#FFF;}
+.bottomBar{position:fixed; bottom:0; left:0; right:0; height:72px; border-top:1px solid #dddddd; background:#FFF;}
 .btnGroup{margin:6px 12px 0px;}
+.btnGroup .am-button{
+	height: 58px;
+	line-height: 58px;
+}
+.btnGroup .am-button span{
+	font-size: 22px!important;
+}
 .inputRightBtn {
    .am-list-item{
     	.am-input-extra{
@@ -110,9 +134,9 @@ $font14:14px;
 		top:0px!important;
 	}
 } 
-.logoArea{width:160px; height:auto; margin:100px auto 20px;}
+.logoArea{width:160px; height:auto; margin:111px auto 20px;}
 .logoArea{
-   img{ width:100%; heigth:auto; }
+   img{ width:100%; height:auto; }
 }
 
 
