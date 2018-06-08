@@ -50,7 +50,7 @@ class Login extends Component {
       this.props.history.push(el.link)
    }
 
-   //登出操作-清空本地缓存
+   //登出操作-
    logout(){
       setItem('user','')
       location.reload()
@@ -68,7 +68,7 @@ const operateArr=[
     {
        icon: require('../../static/images/jianyan.png'),
        text: '来料检验',
-       link:'sdfffff'
+       link:'/RecipienCheckout'
     },
     {
        icon: require('../../static/images/beiping.png'),

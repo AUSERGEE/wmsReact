@@ -4,4 +4,7 @@
 function linkTo(link){
     console.log(link)
 }
-export {linkTo};
+function text(){
+    alert('module -> text()')
+}
+export {linkTo,text};

@@ -1,12 +1,13 @@
 import React,{Component} from 'react'
 import {Modal,NavBar,Icon,Button,List,InputItem,Checkbox,WhiteSpace,Toast} from 'antd-mobile'
 import wx from 'weixin-js-sdk'
-import fetchJsonp from 'fetch-jsonp'
-import wxConfig from '../../util/wxConfig'
+import {getWxConfig,afun} from '../../util/wxConfig'
 import * as tools from '../../util/tools'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as wmsAction from '../../actions/wmsState'
+import WmsAlert from '../../components/Common/wmsAlert'
+import axios from 'axios'
 const prompt = Modal.prompt
 class Recipien extends Component {
    constructor(props) {
@@ -16,13 +17,17 @@ class Recipien extends Component {
         scanCodeType:1,
         prompt:false,
         confirmNum:0,
-        ifWxConfigReady:false
+        ifWxConfigReady:false,
+        alertMsg:{text:'',modal1:false}
    	  }
    }
    
    render() {
       return (
       	<div>
+            {
+                this.state.alertMsg.modal1?<WmsAlert alertMsg={this.state.alertMsg} closeAlert={this.closeAlert.bind(this)}/>:null
+            }
       	    <NavBar mode="dark" 
                    icon={<Icon type="left" />}
                    onLeftClick={() => this.props.history.goBack()}>
@@ -46,21 +51,27 @@ class Recipien extends Component {
               <Item className="checkboxAlign">
                  <div className="checkWarp">
                     <div className="checkItem" >
-                        扫描储位<AgreeItem style={{display:'inline-block',height:'22px',lineHeight:'22px',padding:'0px'}} data-seed="logId"
-                        checked={this.props.recipienState.checkStorge}
-                        onChange={e => this.props.recipienStateActions.recipienState({checkStorge:!this.props.recipienState.checkStorge})} />
+                        扫描储位
+                        <span className="wmsCheckBox" onClick={()=>{this.props.recipienStateActions.recipienState({checkStorge:!this.props.recipienState.checkStorge})}}>
+                          {
+                            this.props.recipienState.checkStorge? <i className="wms-icon-checked checkedtab"></i>:<i className="wms-icon-unChecked unCheckedtab"></i>
+                          }
+                        </span>
                     </div>
                     <div className="checkItem">
-                        超收 <AgreeItem 
-                          checked={this.props.recipienState.IsSplitReceipt==0?false:true}
-                          onChange={e => { this.props.recipienState.IsSplitReceipt==0
-                                           ?this.props.recipienStateActions.recipienState({IsSplitReceipt:1})
-                                           :this.props.recipienStateActions.recipienState({IsSplitReceipt:0})
-                                         }
-                                    }
-                          style={{display:'inline-block',height:'22px',lineHeight:'22px',padding:'0px'}} data-seed="logId"
-                        />
+                        超收 
+                         <span className="wmsCheckBox" onClick={()=>{
+                                                            this.props.recipienState.IsSplitReceipt==0
+                                                            ?this.props.recipienStateActions.recipienState({IsSplitReceipt:1})
+                                                            :this.props.recipienStateActions.recipienState({IsSplitReceipt:0})
+                                                       
+                                                       }}>
+                            {
+                                this.props.recipienState.IsSplitReceipt==1?<i className="wms-icon-checked checkedtab"></i>:<i className="wms-icon-unChecked unCheckedtab"></i>
+                            }
+                        </span>
                     </div>
+                   
                   </div>
               </Item>
               <div className="inputRightBtn">
@@ -69,8 +80,11 @@ class Recipien extends Component {
                        value={this.props.recipienState.checkStorge?this.props.recipienState.intitStorge:this.props.recipienState.text}
                        onChange={val=>this.props.recipienStateActions.recipienState({text:val})}
                        onFocus={()=>{
-                           this.setState({scanCodeType:2})  
-                           this.ScanBarCode()
+                           if(!this.props.recipienState.checkStorge){
+                             this.setState({scanCodeType:2})  
+                             this.ScanBarCode()
+                           }
+                           
                        }}
                        onBlur={()=>{this.setState({scanCodeType:1})}}
                        placeholder={this.state.scanCodeType==2?'请点击扫码按钮扫描条码':''}
@@ -129,7 +143,7 @@ class Recipien extends Component {
 	        >
 		          <div className="am-modal-input-container">
                      <div className="am-modal-input">
-                        <input id="confirmNum" ref="confirmNumInput" value={this.state.confirmNum}
+                        <input type="number" id="confirmNum" ref="confirmNumInput" value={this.state.confirmNum}
                           onFocus={()=>{
                           }}
                           onChange={e=>this.handleChange('confirmNum',e.target.value)} />
@@ -147,12 +161,13 @@ class Recipien extends Component {
     //    wxConfig().then((res)=>{
     //        console.log('WWWWWWWWWWW--->wxConfig():callbak')
     //    })
-      
+      //this.openModal('dsds@@')
+    
+
       setTimeout(function(){
           console.log(this.props)
           this.getOrderId()
       }.bind(this),0)
-      
       if(this.props.recipienState.resetRecepientForm){
         this.reset() 
         this.props.recipienStateActions.recipienState({
@@ -162,6 +177,9 @@ class Recipien extends Component {
 
     
       //this.getStorge('CK372')
+    //    getWxConfig().then((res)=>{
+    //       console.log(res)
+    //    })
       this.getConfig()
       let self=this
       document.getElementById('submitForm').onclick=function(){
@@ -187,8 +205,8 @@ class Recipien extends Component {
    getConfig() { 
         let url = location.href.split('#')[0] //获取锚点之前的链接
         this.loadingToast('loading...')
-        fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
-            return res.json()
+        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
+            return res.data
         }).then(res => {
             Toast.hide()
             console.log("this.wxInit(res)")
@@ -200,9 +218,9 @@ class Recipien extends Component {
         })
    }
    getAccessTokey(){
-        return fetch('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww58877fbb525792d1&corpsecret=wvaM2aIJsDBO586imwN8Fs1vmOmR2xBGNFs4PlgzS5I'
+        return axios.get('https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww58877fbb525792d1&corpsecret=wvaM2aIJsDBO586imwN8Fs1vmOmR2xBGNFs4PlgzS5I'
         ,).then((res)=>{
-            return res.json()
+            return res.data
         })
    }
    wxInit(res) {
@@ -283,10 +301,8 @@ class Recipien extends Component {
       let url2=`${url}?barCode=${barCode}&checkreceive=false&ScanStatus=1`
       let url3='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/ScanDataDealBarCodeTest'
 
-      fetch(`${url2}`,{
-            method:"GET",   //请求方法
-      }).then((res)=>{
-            return res.json()
+      axios.get(`${url2}`).then((res)=>{
+            return res.data
       }).then((res)=>{
             if(res.MessageResult.IsSuccess){
                 let ReceivingQuantity=res.ReceivementDetail.ReceivingQuantity
@@ -315,7 +331,6 @@ class Recipien extends Component {
                 Toast.fail(res.MessageResult.ErrorMessage?res.MessageResult.ErrorMessage:'error', 2);
             }
             
-            
       }).catch((e)=>{
          Toast.fail('扫码解析请求遇到了错误:001', 2);
       })
@@ -324,8 +339,8 @@ class Recipien extends Component {
    getOrderId(){
        let url='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetOrCreateReceiveNumber'
        let userCode=this.props.userState.user
-       fetch(url+`?userCode=${userCode}`).then((res)=>{
-           return res.json()
+       axios.get(url+`?userCode=${userCode}`).then((res)=>{
+           return res.data
        }).then((res)=>{
            console.log(res)
            this.props.recipienStateActions.recipienState({
@@ -337,8 +352,8 @@ class Recipien extends Component {
    }
    getStorge(ScanDataDealSpCode){
        let url='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/ScanDataDealSpCode'
-       fetch(url+`?barCode=${ScanDataDealSpCode}&checkreceive=false&ScanStatus=1`).then((res)=>{
-           return res.json()
+       axios.get(url+`?barCode=${ScanDataDealSpCode}&checkreceive=false&ScanStatus=1`).then((res)=>{
+           return res.data
        }).then((res)=>{
            
            if(res.MessageResult.IsSuccess){
@@ -355,9 +370,9 @@ class Recipien extends Component {
        })
    }
    antd_prompt(){
-    prompt('defaultValue', 'defaultValue for prompt', [
-        { text: 'Cancel' },
-        { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },
+      prompt('defaultValue', 'defaultValue for prompt', [
+         { text: 'Cancel' },
+         { text: 'Submit', onPress: value => console.log(`输入的内容:${value}`) },
       ], 'default', '100')
     }
 
@@ -380,6 +395,7 @@ class Recipien extends Component {
             [key]:val
         })
     }
+    
     submitForm() {
        Toast.loading('正在保存...',0)
        let url='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/SaveReceivingData'
@@ -393,23 +409,23 @@ class Recipien extends Component {
           userCode:this.props.userState.user,
           receivingQuantity:this.props.recipienState.num,
           spCode:this.props.recipienState.intitStorge,
-          QRCode:this.props.recipienState.QRCode,
+          QRCode:(this.props.recipienState.QRCode).replace(/&/g,'%26'),
           QRCodeDate:this.props.recipienState.QRCodeDate
        }
        let urlData=`?ReceivingNumber=${formData.ReceivingNumber}&receivingQuantity=${formData.receivingQuantity}&po=${formData.po}&materialCode=${formData.materialCode}&SupplierCode=${formData.SupplierCode}&spCode=${formData.spCode}&isNewReceiveNumber=${formData.isNewReceiveNumber}&IsSplitReceipt=${formData.IsSplitReceipt}&QRCode=${formData.QRCode}&QRCodeDate=${formData.QRCodeDate}&userCode=${formData.userCode}`
        console.log(this.props.recipienState)
        console.log(formData)
        console.log(url+urlData)
-       fetch(url+urlData).then((res)=>{
-           return res.json()
+       axios.get(url+urlData).then((res)=>{
+           return res.data
        }).then((res)=>{
            console.log(res)
            if(res.IsSuccess){
                Toast.hide()
-               alert('保存成功')
+               this.openModal('保存成功')
            }else{
                Toast.hide()
-               alert(res.ErrorMessage)
+               this.openModal(res.ErrorMessage)
            }
        }).catch((e)=>{
             Toast.fail('error', 2);
@@ -422,25 +438,31 @@ class Recipien extends Component {
             matail:'',
             org:'',
             num:null,
-            checkStorge:false
+            checkStorge:false,
+            IsSplitReceipt:0
         })
         this.getOrderId()
     }
+    openModal(text){
+        this.setState({
+            alertMsg:{text:text,modal1:true}
+        })
+    }
+    closeAlert(){
+        this.setState({
+            alertMsg:{text:'',modal1:false}
+        })
+    }   
 }
-
 
 const Item = List.Item;
 const AgreeItem = Checkbox.AgreeItem;
-
 const mapStateToProps = (state) => {
 	return state
 }
-
 const mapDispatchtoProps = (dispatch) => {
 	return {
-        recipienStateActions:bindActionCreators(wmsAction, dispatch)
+        recipienStateActions:bindActionCreators(wmsAction,dispatch)
 	}
 }
 export default connect(mapStateToProps,mapDispatchtoProps)(Recipien)
-
-

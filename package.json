@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "antd-mobile": "^2.1.8",
+    "axios": "^0.18.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-fastclick": "^3.0.2",

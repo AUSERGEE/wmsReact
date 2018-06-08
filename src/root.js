@@ -17,8 +17,10 @@ import AuthRoute from  './containers/AuthRoute'
 import HomePage from './containers/homePage'
 import Recipien from './containers/recipien'
 import RecipienDtl from './containers/recipienDtl'
+import RecipienCheckout from './containers/recipienCheckout'
 import Vconsole from 'vconsole'
 import './static/css/app.scss'
+
 initReactFastclick()
 if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
    let vConsole = new Vconsole()
@@ -36,6 +38,7 @@ class Root extends Component {
 					   <Route path="/" exact component={HomePage}/>
 					   <Route path="/Recipien" exact component={Recipien}/>
 					   <Route path="/RecipienDtl" exact component={RecipienDtl}/>
+					   <Route path="/RecipienCheckout" exact component={RecipienCheckout}/>
 					   <Route path="/Login" component={Login}/>
 					   <Route path='/404' component={NotFound} />
 					   <Redirect from='*' to='/404' />

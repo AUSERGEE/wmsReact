@@ -1,3 +1,4 @@
+@import './font.css';
 #tab-bar.demo { display: flex; flex-direction: column;
 }
 #tab-bar .demoName { height: 40px;}
@@ -5,7 +6,18 @@
 
 .listItem{ height: 90px;border-bottom: 1px solid #d3d3d3; }
 
-
+/***************公共的样式******************/
+//模拟checkbox
+.wmsCheckBox{
+	height: 26px;
+	width: 26px;
+	display: inline-block;
+	position: relative;
+	vertical-align: bottom;
+	margin-left:6px;
+}
+.wmsCheckBox>.unCheckedtab{font-size:26px; color:#c3c3c3;position: absolute; top:0px;}
+.wmsCheckBox>.checkedtab{font-size:26px; color:#108EE9;position: absolute; top:0px;}
 /**************登录页面*****************/
 @mixin bottomAfterSet {
     right: 19px!important;
@@ -144,3 +156,66 @@ $font14:14px;
 	display:inline-block;
 	margin-right:32px;
 }
+
+/*****************来料检验******************/
+.chooseOrderList{
+	height:154px;
+	overflow-y: scroll;
+	li{
+		height:44px;
+		line-height:44px;
+		position:relative;
+		padding-left:42px;
+		text-align:left;
+		.order_checkIc{
+			position:absolute;
+			top:6px;
+			left:10px;
+			display:none;
+		}
+	}
+	li:not(:last-child){border-bottom:1px solid #ddd;}
+	li.active{
+		color:#108ee9;
+		.order_checkIc{
+			display:block;
+		}
+	}
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+	html:not([data-scale]) .chooseOrderItem{
+	  border-bottom: none;
+	}
+	html:not([data-scale]) .chooseOrderItem:not(:last-child)::after {
+	  content: '';
+	  position: absolute;
+	  background-color: #ddd;
+	  display: block;
+	  z-index: 1;
+	  top: auto;
+	  right: auto;
+	  bottom: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 1PX;
+	  -webkit-transform-origin: 50% 100%;
+		  -ms-transform-origin: 50% 100%;
+			  transform-origin: 50% 100%;
+	  -webkit-transform: scaleY(0.5);
+		  -ms-transform: scaleY(0.5);
+			  transform: scaleY(0.5);
+	}
+  }
+  @media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
+	html:not([data-scale]) .chooseOrderItem:not(:last-child)::after {
+	  -webkit-transform: scaleY(0.33);
+		  -ms-transform: scaleY(0.33);
+			  transform: scaleY(0.33);
+	}
+  }
+
+  .btnListItem .am-list-line .am-list-content{
+	  text-align: center!important;
+	  color:#108ee9!important;
+  }

@@ -1,0 +1,21 @@
+/*---wmsFont----备注:只考虑移动端*/
+@font-face {font-family: "iconfont";
+    src:url('./fonts/iconfont.ttf') format('truetype'); 
+}
+
+[class^="wms-icon-"], [class*="wms-icon-"]{
+	font-family:"iconfont" !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: middle;
+	
+}
+
+.wms-icon-unChecked:before{ content: "\e620"; }
+.wms-icon-checked:before{ content: "\e61b"; }

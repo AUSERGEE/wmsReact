@@ -3,7 +3,9 @@ import { List, InputItem, WhiteSpace,Button,Modal,Toast} from 'antd-mobile'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as userLoginAction from '../../actions/userState'
-import {getItem, setItem} from '../../util/localStorage'
+import {getItem,setItem} from '../../util/localStorage'
+import * as tool from '../../util/tools'
+import axios from 'axios'
 class Login extends Component {
    constructor(props) {
    	  super(props)
@@ -69,7 +71,23 @@ class Login extends Component {
    }
    
    componentDidMount(){
-   	  console.log(this.props.userState)
+       //this.auotLogin()
+      //  axios.get('http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetCheckUserAndPwd?user=a1&pwd=a1').then(function(res){
+      //    console.log(res)
+      //  })
+   }
+   auotLogin() {  //自动登录
+     setTimeout(function(){
+          let userInfo=getItem('user')
+          let json_userInfo=userInfo?JSON.parse(userInfo):''
+          if(json_userInfo.user){
+            this.setState({
+                user:json_userInfo.user,
+                pwd:json_userInfo.pwd
+            })
+          }
+
+        },0)
    }
    handleChange(key,val){
      this.setState({
@@ -87,7 +105,12 @@ class Login extends Component {
 
       let userInfo={user:this.state.user,pwd:this.state.pwd,login:true,loginTip:true}
       this.loadingToast('登录中..')
-      this.loginFetch(userInfo).then((res)=>{
+      console.log('1111')
+      axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetCheckUserAndPwd?user=${userInfo.user}&pwd=${userInfo.pwd}`
+      ).then((res)=>{
+          return res.data
+      }).then((res)=>{
+        console.log('33333')
           if(res.messageResult.IsSuccess){   //登录成功后
             Toast.hide()
             userInfo.User_ScanerID=res.UserInfo.User_ScanerID
@@ -101,9 +124,11 @@ class Login extends Component {
       })
    	  
    }
-
+   
    //用户登录验证请求
    loginFetch(data){
+    console.log('2222')
+    console.log(fetch)
       return fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetCheckUserAndPwd?user=${data.user}&pwd=${data.pwd}`
       ).then((res)=>{
           return res.json()
@@ -131,6 +156,9 @@ class Login extends Component {
 	    this.setState({
 	      [key]: false,
 	    });
+    }
+    moduleFunctionTest() {
+        return tool.text()
     }
 }
 

@@ -3,7 +3,7 @@ import {Flex,NavBar,Icon,Button,Toast} from 'antd-mobile'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as wmsAction from '../../actions/wmsState'
-
+import axios from 'axios'
 class recipienDtl extends Component {
    constructor(props) {
    	  super(props)
@@ -64,27 +64,31 @@ class recipienDtl extends Component {
       setTimeout(function(){
           this.GetReceiveDetail()
       }.bind(this),0)
-      console.log(this.props)
    }
    GetReceiveDetail(){
         
-        fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetReceiveDetailQuery?userCode=${this.props.userState.user}&receivingNumber=${this.props.recipienState.orderId}`).then((res)=>{
-            return res.json()
+        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetReceiveDetailQuery?userCode=${this.props.userState.user}&receivingNumber=${this.props.recipienState.orderId}`).then((res)=>{
+            return res.data
         }).then(res => {
-            console.log(JSON.parse(res.jsonStr))
-            this.setState({
-                receiveData:JSON.parse(res.jsonStr)
-            })
+            //console.log(JSON.parse(res.jsonStr))
+            if(res.jsonStr!=''){
+                this.setState({
+                    receiveData:JSON.parse(res.jsonStr)
+                })
+            }else{
+                Toast.info('暂无数据', 1)
+            }
+            
         }).catch(e=>{
-            console.log(e)
+            //console.log(e)
             Toast.hide()
             Toast.fail('error', 1)
         })
    }
    clearReceive(){
         Toast.loading('清除中...', 0);
-        fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/clearReceiveDetail?userCode=${this.props.userState.user}&receivingNumber=${this.props.recipienState.orderId}`).then((res)=>{
-            return res.json()
+        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/clearReceiveDetail?userCode=${this.props.userState.user}&receivingNumber=${this.props.recipienState.orderId}`).then((res)=>{
+            return res.data
         }).then(res => {
             console.log(res.messageResult.IsSuccess)
             if(res.messageResult.IsSuccess){
@@ -107,8 +111,8 @@ class recipienDtl extends Component {
    }
    receiving(){
         Toast.loading('收货中...', 0);
-        fetch(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/receivingOperation?userCode=${this.props.userState.user}&receivingNumber=${this.props.recipienState.orderId}&supplierCode=${this.props.recipienState.cSupplierCode}&supplierName=${this.props.recipienState.supplierName}`).then((res)=>{
-            return res.json()
+        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/receivingOperation?userCode=${this.props.userState.user}&receivingNumber=${this.props.recipienState.orderId}&supplierCode=${this.props.recipienState.cSupplierCode}&supplierName=${this.props.recipienState.supplierName}`).then((res)=>{
+            return res.data
         }).then(res => {
             console.log(res.IsSuccess)
             if(res.IsSuccess){
