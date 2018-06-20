@@ -47,9 +47,9 @@ function wxInit(res) {
         success: function (res) {
             console.log('wx.checkJsApi-return:'+JSON.stringify(res))
             if(res.err_info){
-                alert('dd')
+                
             }else{
-                alert('ddaa')
+                
             }
         }
     });

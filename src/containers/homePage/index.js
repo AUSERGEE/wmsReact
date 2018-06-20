@@ -73,12 +73,12 @@ const operateArr=[
     {
        icon: require('../../static/images/beiping.png'),
        text: '备品收货',
-       link:'sdfffff'
+       link:'/SparesRece'
     },
     {
        icon: require('../../static/images/lingliao.png'),
        text: 'MO领料',
-       link:'sdfffff'
+       link:'/MOpicking'
     },
     {
        icon: require('../../static/images/tuiliao.png'),

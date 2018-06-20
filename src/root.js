@@ -18,6 +18,9 @@ import HomePage from './containers/homePage'
 import Recipien from './containers/recipien'
 import RecipienDtl from './containers/recipienDtl'
 import RecipienCheckout from './containers/recipienCheckout'
+import SparesRece from './containers/sparesRece'
+import MOpicking from './containers/MO-picking'
+
 import Vconsole from 'vconsole'
 import './static/css/app.scss'
 
@@ -39,6 +42,8 @@ class Root extends Component {
 					   <Route path="/Recipien" exact component={Recipien}/>
 					   <Route path="/RecipienDtl" exact component={RecipienDtl}/>
 					   <Route path="/RecipienCheckout" exact component={RecipienCheckout}/>
+					   <Route path='/SparesRece'  component={SparesRece} />
+					   <Route path='/MOpicking'  component={MOpicking} />
 					   <Route path="/Login" component={Login}/>
 					   <Route path='/404' component={NotFound} />
 					   <Redirect from='*' to='/404' />

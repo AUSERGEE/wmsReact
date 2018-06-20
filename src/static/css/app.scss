@@ -18,6 +18,8 @@
 }
 .wmsCheckBox>.unCheckedtab{font-size:26px; color:#c3c3c3;position: absolute; top:0px;}
 .wmsCheckBox>.checkedtab{font-size:26px; color:#108EE9;position: absolute; top:0px;}
+
+.subPage{position:fixed; top:0; left:0; right:0; bottom:0;background:#FFF; z-index:2;}
 /**************登录页面*****************/
 @mixin bottomAfterSet {
     right: 19px!important;
@@ -96,7 +98,8 @@ $font14:14px;
 
 /**********************************/
 .wmsTb{
-   margin:10px 12px;	
+   margin:10px 0px;
+   position: relative;	
 }
 .tbHeader{
 	height:32px;
@@ -206,6 +209,9 @@ $font14:14px;
 		  -ms-transform: scaleY(0.5);
 			  transform: scaleY(0.5);
 	}
+	
+	
+
   }
   @media (-webkit-min-device-pixel-ratio: 2) and (-webkit-min-device-pixel-ratio: 3), (min-resolution: 2dppx) and (min-resolution: 3dppx) {
 	html:not([data-scale]) .chooseOrderItem:not(:last-child)::after {
@@ -215,7 +221,65 @@ $font14:14px;
 	}
   }
 
+  html:not([data-scale]) .x-border::after {
+	content: '';
+	position: absolute;
+	border:1px solid #ddd;
+	display: block;
+	z-index: 1;
+	pointer-events: none;
+	top: 0;
+	right: auto;
+	bottom: auto;
+	left: 0;
+	width: 200%;
+	height: 200%;
+	-webkit-transform-origin: 0% 0%;
+		-ms-transform-origin: 0% 0%;
+			transform-origin: 0% 0%;
+	-webkit-transform: scale(0.5);
+		-ms-transform: scale(0.5);
+			transform: scale(0.5);
+  }
+
+  html:not([data-scale]) .x-border-top::after {
+	content: '';
+	position: absolute;
+	border:1px solid #ddd;
+	display: block;
+	z-index: 1;
+	pointer-events: none;
+	top: 0;
+	right: auto;
+	bottom: auto;
+	left: 0;
+	width: 100%;
+	height:1px;
+	-webkit-transform-origin: 50% 100%;
+	-ms-transform-origin: 50% 100%;
+		transform-origin: 50% 100%;
+	-webkit-transform: scaleY(0.5);
+	-ms-transform: scaleY(0.5);
+		transform: scaleY(0.5);
+  }
+
   .btnListItem .am-list-line .am-list-content{
 	  text-align: center!important;
 	  color:#108ee9!important;
   }
+
+
+  /********************备品收货*****************************/
+  .Checkone .wmsCheckBox{margin-right: 6px;}
+  .wmsTb_wrap{margin:12px 12px; overflow-x: scroll;}
+  .tb_td{display:inline-block;width:100px;}
+  .tbHeader>div{display:inline-block;width:100px;box-sizing: border-box; padding-left: 8px;}
+  .tb_w_sub{width:140px!important;}
+  .wmsTb_wrap>.wmsTb{width:622px;}
+  .wmsTb_Tbody div.active{ 
+	   background: #70bef7 !important;
+	   color: #FFF!important;
+  }
+  /********************改写antd*************************/
+  .font-small .am-input-label{font-size:14px!important;}
+  .btnGroup .buttonFontSmall>span{font-size:16px!important;}

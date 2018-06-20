@@ -12,7 +12,8 @@ let recipienInitState={
      supplierName:'',
      resetRecepientForm:false,
      QRCode:null,
-     QRCodeDate:null
+     QRCodeDate:null,
+     spareOrderId:''
 }
 const recipienState = (state=recipienInitState,action)=>{
     switch (action.type){

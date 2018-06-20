@@ -225,6 +225,7 @@ class Recipien extends Component {
    }
    wxInit(res) {
       let self=this
+      console.log(` appId: 'ww58877fbb525792d1'+timestamp: ${res.timestamp}+nonceStr: ${res.nonceStr}+ signature: ${res.signature}`)
       wx.config({
           debug: false,
           appId: 'ww58877fbb525792d1',
@@ -242,13 +243,13 @@ class Recipien extends Component {
             }
         });
         console.log('AAAAA')
-       self.setState({
+        self.setState({
            ifWxConfigReady:true
-       })
+        })
 
      });
      wx.error(function(err) {
-        console.log(JSON.stringify(err))
+        self.openModal("wx.error()："+JSON.stringify(err))
      });
    }
 

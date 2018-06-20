@@ -25,7 +25,11 @@ class RecipienCheckout extends Component {
          chooseOrderIndex:0,
          afterChoose:false,
          barCode:'',
-         alertMsg:{text:'',modal1:false}
+         alertMsg:{text:'',modal1:false},
+         ReceivementDetail:'',
+         OldCheckResult:'',
+         scanStatus:1,
+         CheckResult:''
    	  }
    }
    
@@ -49,6 +53,7 @@ class RecipienCheckout extends Component {
               <InputItem
                  editable={false}
                  value={this.state.scanProblem}
+                 onClick={this.scanQrCodeByInput.bind(this)}
               >扫描不良</InputItem>
               <InputItem
                  editable={false}
@@ -70,7 +75,7 @@ class RecipienCheckout extends Component {
              </List>
              <div className="bottomBar">
                <div className="btnGroup">
-                   <Button type="primary" inline style={{ marginRight: '2%',width:'32%'}} >确认</Button>
+                   <Button type="primary" inline style={{ marginRight: '2%',width:'32%'}} onClick={this.saveData.bind(this)}>确认</Button>
                    <Button type="primary" inline style={{ marginRight: '2%',width:'32%'}} onClick={this.reset.bind(this)} >清除</Button>
                    {
                        process.env.NODE_ENV !== 'production'
@@ -197,6 +202,8 @@ class RecipienCheckout extends Component {
           console.log(JSON.stringify(err))
       });
     }
+
+    //用与pc端模拟调试扫码后的效果
     pcScanCode() {
       let result='32176790_&_4500-783152-0S00_&_JS068_&_3000_&_783152_%26_*_&_60000_&_2017-03-17'
       let barCode=result.replace(/&/g,'%26')
@@ -205,8 +212,13 @@ class RecipienCheckout extends Component {
         barCode:barCode
       }) 
     }
+    //手机端扫描二维码
     scanQrCode(){
         let self=this
+        Toast.loading('loading...',0)
+        this.setState({
+            chooseOrderIndex:0
+        })
         if(!this.state.ifWxConfigReady){
             return false
         }else{
@@ -214,6 +226,7 @@ class RecipienCheckout extends Component {
              needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
              scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
              success: function (res) {
+                 Toast.hide()
                  var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
                  console.log("扫描结果："+result)
                  let barCode=result.replace(/&/g,'%26')
@@ -225,15 +238,40 @@ class RecipienCheckout extends Component {
          });
  
         }
-      
- 
     }
+    //扫描不良
+    scanQrCodeByInput(event){
+        Toast.loading('loading...',0)
+        let self=this
+        this.setState({
+            scanStatus:2
+        })
+        if(!this.state.ifWxConfigReady){
+            return false
+        }else{
+         wx.scanQRCode({
+             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+             scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+             success: function (res) {
+                 Toast.hide()
+                 var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
+                 console.log("扫描不良结果："+result)
+                 self.setState({
+                    scanProblem:result
+                 })
+             }
+         });
+ 
+        }
+    }
+    //根据扫码结果获取收货单号数组
     scanDataDealCode(barCode){
-
+       Toast.loading('loading...',0)
        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAMaterialCheck/scanDataDealBarCode?barCode=${barCode}&scanStatus=1`
        ).then((res)=>{
            return res.data
         }).then(res => {
+           Toast.hide()
            console.log(res)
            this.setState({
              listReceivingNumber:res.ListReceivingNumber,
@@ -242,17 +280,20 @@ class RecipienCheckout extends Component {
            })
         }).catch(e=>{
            console.log(e)
-        
-            Toast.fail('error', 1);
+           Toast.hide()
+           Toast.fail('error', 1);
         })
     }
+    //根据收货单号获取收货单信息
     getFormInfo=()=>{
+        Toast.loading('loading...',0)
         let receivingNumber=this.state.listReceivingNumber[this.state.chooseOrderIndex]
         axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAMaterialCheck/getReceiveMentDetailByReceivingNumber?receivingNumber=${receivingNumber}&barCode=${this.state.barCode}
         `
         ).then((res)=>{
            return res.data
         }).then(res => {
+           Toast.hide()
            let receiveDtl=res.ReceivementDetail
            this.setState({
               recipienNum:receiveDtl.ReceivingNumber,
@@ -260,34 +301,44 @@ class RecipienCheckout extends Component {
               storage:receiveDtl.spCode,
               PO:receiveDtl.PO,
               meterial:receiveDtl.MaterialCode,
-              CheckResult:receiveDtl.CheckResult
+              CheckResult:receiveDtl.CheckResult,
+              ReceivementDetail:receiveDtl
            })
         }).catch(e=>{
            console.log(e)
-        
+           Toast.hide()
             Toast.fail('error', 1);
         })
     }
+    //
     getResultState(checkState){
        if(checkState==0){
            this.reset()
        }else{
+            Toast.loading('loading...',0)
             axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAMaterialCheck/getReceiveingResultState?checkState=${checkState}&CheckResult=${this.state.CheckResult}
             `
             ).then((res)=>{
               return res.data
             }).then(res => {
+               Toast.hide()
+               this.setState({
+                 OldCheckResult:res.OldCheckResult
+               })
                if(res.messageResult.IsSuccess){
                    this.openModal('操作成功')
                }else{
                    this.openModal(res.messageResult.ErrorMessage)
                }
             }).catch(e=>{
+              Toast.hide()
               console.log(e)
               Toast.fail('error', 1);
             })
         }
     }
+
+    //表单重置
     reset(){
         this.setState({
             recipienNum:'',
@@ -307,6 +358,35 @@ class RecipienCheckout extends Component {
         this.setState({
             alertMsg:{text:'',modal1:false}
         })
+    }
+    saveData() {
+        Toast.loading('loading...',0)
+        let QRCode=this.state.ReceivementDetail.QRCode.replace(/&/g,'%26')
+        let url =`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAMaterialCheck/saveReceivingCheckData?`
+        +`receivingNumber=${this.state.recipienNum}&po=${this.state.PO}&qrCode=${QRCode}`
+        +`&rceivingItemNo=${this.state.ReceivementDetail.ReceivingItemNo}&checkResult=${this.state.CheckResult}`
+        +`&materialCode=${this.state.ReceivementDetail.MaterialCode}&receivedQuantity=${this.state.ReceivementDetail.ReceivedQuantity}`
+        +`&spCode=${this.state.ReceivementDetail.spCode}&oldCheckResult=${this.state.OldCheckResult}`
+        +`&scanStatus=${this.state.scanStatus}&userCode=${this.props.userState.user}`
+        
+        console.log("确认操作提交的链接："+url)
+        axios.get(url
+            ).then((res)=>{
+              return res.data
+            }).then(res => {
+               Toast.hide()
+               console.log(res)
+               if(res.IsSuccess){
+                 this.openModal(res.ErrorMessage)
+                 this.reset()
+               }else{
+                 this.openModal(res.ErrorMessage)
+               }
+            }).catch(e=>{
+              Toast.hide()
+              console.log(e)
+              Toast.fail('error', 1);
+            })
     }  
 }
 
