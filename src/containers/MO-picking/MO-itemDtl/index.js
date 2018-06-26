@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {NavBar,Icon,Button,List,InputItem,WhiteSpace,Toast,Modal,Picker} from 'antd-mobile'
+import {NavBar,Icon,Button,List,InputItem,WhiteSpace,Toast,Modal,Picker,Flex} from 'antd-mobile'
 import wx from 'weixin-js-sdk'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
@@ -12,10 +12,13 @@ class MOdtl extends Component {
    	  this.state = {
          modal1:false,
          tableArr:[],
-         barCode:''
+         barCode:'',
+         prompt:false,
+         confirmNum:0,
+         scanTwoData:null
    	  }
    }
-   
+
    render() {
       return (
       	<div className="subPage">
@@ -25,33 +28,34 @@ class MOdtl extends Component {
                    MO-数据行
             </NavBar>
             <WhiteSpace/>
-            <div className="wmsTb_wrap">
+            <List >
+              <InputItem
+                 editable={false}
+                 value={this.props.location.query.line}
+              >线体</InputItem>
+              <InputItem
+                 editable={false}
+                 value={this.props.location.query.materialCode}
+              >物料号</InputItem>
+            </List>
+            <WhiteSpace/>
+            <div className="flexTbWarp">
                <div className="wmsTb x-border">
-                    <div className="tbHeader">
-                            <div className="tb_w_sub">收货单号</div>
-                            <div className="tb_w_sub">物料号</div>
-                            <div className="tb_w_sub">批次号</div>
-                            <div>数量</div>
-                            <div>储位</div>
-                    </div>
+                    <Flex className="tbHeader">
+                        <Flex.Item>未领数量</Flex.Item>
+                        <Flex.Item>供应商</Flex.Item>
+                        <Flex.Item className="flex2">条码日期</Flex.Item>
+                    </Flex>
                     <div className="wmsTb_Tbody">
                     {
-                        this.state.tableArr.length>0
-                        ?(  this.state.tableArr.map((item,index)=>{
-                                return (
-                                    <div key={index} 
-                                         onClick={this.activeTr.bind(this,index)}
-                                         data-orderid={item['收货单号']}
-                                         className={`tb_tr ${this.state.activeTrIndex===index?'active':''}`}
-                                    >
-                                        <div className="tb_td tb_w_sub">{item['收货单号']}</div>
-                                        <div className="tb_td tb_w_sub">{item['物料号']}</div>
-                                        <div className="tb_td tb_w_sub">{item['批次号']}</div>
-                                        <div className="tb_td">{item['数量']}</div>
-                                        <div className="tb_td">{item['储位']}</div>
-                                    </div>
-                                )
-                            })
+                        this.state.scanTwoData
+                        ?(  
+                            <Flex className="tb_tr">
+                                <Flex.Item>{this.state.scanTwoData.sumPickingQty}</Flex.Item>
+                                <Flex.Item>{this.state.scanTwoData.supplierCode}</Flex.Item>
+                                <Flex.Item className="flex2">{this.state.scanTwoData.qrCodeDate}</Flex.Item>
+                            </Flex>
+                             
                          ):(
                                 [1,2,3,4,5,6].map((item,index)=>{
                                     return (
@@ -71,10 +75,39 @@ class MOdtl extends Component {
                        ?(<Button type="primary" inline style={{ margin: '0 auto',width:'99%',display:'block'}} 
                        onClick={()=>{this.pcScanCode()}} >模拟扫码</Button>)
                        :(<Button type="primary" inline style={{ margin: '0 auto',width:'99%',display:'block'}} 
-                       onClick={()=>{}} >扫码</Button>)
+                       onClick={()=>{this.scanQrCode()}} >扫码</Button>)
                    }
                 </div>
              </div>
+
+            <Modal
+                visible={this.state.prompt}
+                transparent
+                maskClosable={false}
+                onClose={this.onClose('prompt')}
+                title="确认数量"
+                footer={[{ text: '确定', onPress: () => { 
+                                if(this.state.confirmNum<1){
+                                    Toast.fail('数量输入错误', 2)
+                                    return false
+                                }
+                                let data=this.state.scanTwoData
+                                data.sumPickingQty=this.state.confirmNum
+                                this.setState({
+                                    scanTwoData:data
+                                })
+                                this.confirmSumPickingQty()
+                                this.onClose('prompt')(); 
+                        } }]}
+                wrapProps={{ onTouchStart: this.onWrapTouchStart }}
+	        >
+		          <div className="am-modal-input-container">
+                     <div className="am-modal-input">
+                        <input type="number" id="confirmNum" ref="confirmNumInput" value={this.state.confirmNum}
+                          onChange={e=>this.handleChange('confirmNum',e.target.value)} />
+                     </div>
+		          </div>
+	        </Modal>
         </div>
       )
     }
@@ -126,37 +159,125 @@ class MOdtl extends Component {
 
     //pc端调试-模拟手机端扫码效果
     pcScanCode(){
-        let result='32178156_&_0604-000000-01_&_MS011_&_100PCS_&_BLANK LABEL_&_1_&_100PCS_&_2017-07-20'
+        let result='40015393_&_47ER-F61371-0080_&_FH044_&_*_&_*_&_*_&_20000_&_2017-2-17'
         let barCode=result.replace(/&/g,'%26')
         this.scanDataDealCode(barCode)
         this.setState({
-            barCode:barCode
+            barCode
         }) 
     }
 
+    //移动端扫码
+    scanQrCode(){
+        let self=this
+        if(!this.state.ifWxConfigReady){
+            return false
+        }else{
+         wx.scanQRCode({
+             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+             scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+             success: function (res) {
+                 var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
+                 console.log("扫描结果："+result)
+                 let barCode=result.replace(/&/g,'%26')
+                 self.scanDataDealCode(barCode)
+                 self.setState({
+                    barCode
+                 })
+             }
+         });
+        }
+    }
     //根据扫码结果获取数据
     scanDataDealCode(barCode){
         Toast.loading('loading...',0)
-        axios.get(`XXXXX：：：：http://wmspda.skyworthdigital.com:9001/webApi/api/PDAGiftsReceiving/scanDataDealBarCode?barCode=${barCode}`
+        let userCode=this.props.userState.user
+        let line=this.props.location.query.line
+        let materialCode=this.props.location.query.materialCode
+        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAMoSendingMaterial/scanTwoDataDealBarCode?`+
+          `qrCode=${barCode}&userCode=${userCode}&line=${line}&materialCode=${materialCode}`
         ).then((res)=>{
             return res.data
             }).then(res => {
-            Toast.hide()
-            console.log(res)
-            this.setState({
-                    scanDataDealBarCode:res
-            })
+                Toast.hide()
+                console.log(res)
+                
+                if(res.messageResult.IsSuccess){
+                    this.wmsPrompt(res.sumPickingQty)
+                    this.setState({
+                        scanTwoData:res
+                    })
+                }else{
+                    Toast.info(res.messageResult.ErrorMessage,1.8)
+                }
+                console.log(this.state.scanTwoData,'00')
             }).catch(e=>{
             console.log(e)
             Toast.hide()
             Toast.fail('error', 1);
             })
-        }
+    }
+
+    //确认领料数量
+    confirmSumPickingQty(){
+        Toast.loading('loading...',0)
+        let userCode=this.props.userState.user
+        console.log(this.state.scanTwoData.qrCodeDate)
+        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/PDAMoSendingMaterial/confirmSumPickingQty?`
+                  +`sumPickingQty=${this.state.scanTwoData.sumPickingQty}&line=${this.props.location.query.line}`
+                  +`&materialCode=${this.props.location.query.materialCode}&supplierCode=${this.state.scanTwoData.supplierCode}`
+                  +`&qrCodeDate=${this.state.scanTwoData.qrCodeDate}&userCode=${userCode}&qrCode=${this.state.barCode}`
+        ).then((res)=>{
+            return res.data
+            }).then(res => {
+                Toast.hide()
+                console.log(res)
+                console.log(this.state.scanTwoData,'111')
+                let aScanTwoData=this.state.scanTwoData
+                if(res.sResultJsonStr==""){
+                    this.setState({
+                        scanTwoData:null
+                    })
+                }else{
+                    let resultArr=JSON.parse(res.sResultJsonStr)
+                    aScanTwoData.sumPickingQty=resultArr[0]["未领数量"]
+                    aScanTwoData.supplierCode=resultArr[0]["供应商代码"]
+                    aScanTwoData.qrCodeDate=resultArr[0]["条码日期"]
+                    this.setState({
+                        scanTwoData:aScanTwoData
+                    })
+                }
+                
+                
+                
+                console.log(this.state.scanTwoData,'22')
+            }).catch(e=>{
+            console.log(e)
+            Toast.hide()
+            Toast.fail('error', 1);
+            })
+    }
     openModal(text){
         this.setState({
             alertMsg:{text:text,modal1:true}
         })
     }
+    onClose = key => () => {
+	    this.setState({
+	      [key]: false,
+	    });
+    }
+    handleChange(key,val){
+        this.setState({
+            [key]:val
+        })
+    }
+    wmsPrompt(initNum){
+        this.setState({
+           prompt:true,
+           confirmNum:initNum
+        });
+     }
 }
 const mapStateToProps = (state) => {
 	return state

@@ -432,6 +432,7 @@ class Recipien extends Component {
             Toast.fail('error', 2);
        })
     }
+
     reset(){
         this.props.recipienStateActions.recipienState({
             intitStorge:null,
