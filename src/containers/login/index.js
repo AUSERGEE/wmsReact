@@ -51,7 +51,9 @@ class Login extends Component {
 	        <div className='btnBox'>
               <Button type="primary" onClick={this.loginFun.bind(this)}>登录</Button>
           </div>
-
+          <div className="copyrightBar">
+              <p>Copyright @ 2018  深圳创维数字技术有限公司  版权所有</p>
+          </div>
           <Modal
 	          visible={this.state.modal1}
 	          transparent

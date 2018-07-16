@@ -83,17 +83,17 @@ const operateArr=[
     {
        icon: require('../../static/images/tuiliao.png'),
        text: 'MO退料',
-       link:'sdfffff'
+       link:'/MoSaleReturn'
     },
     {
        icon: require('../../static/images/tuiliao.png'),
        text: 'PO退料',
-       link:'sdfffff'
+       link:'/PoSalesReturn'
     },
     {
        icon: require('../../static/images/tuiliao.png'),
        text: '备件退料',
-       link:'sdfffff'
+       link:'/SPSalesReturn'
     },
     {
        icon: require('../../static/images/yidong.png'),

@@ -284,3 +284,16 @@ $font14:14px;
   /********************改写antd*************************/
   .font-small .am-input-label{font-size:14px!important;}
   .btnGroup .buttonFontSmall>span{font-size:16px!important;}
+
+  /*********************************************/
+  .copyrightBar{
+	  position:absolute;
+	  bottom:12px;
+	  left:0;
+	  right:0;
+	  text-align:center;
+  }
+  .copyrightBar>p{   
+	 color: #adadad;
+	 font-size: 10px;
+  }
