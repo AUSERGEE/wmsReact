@@ -33,6 +33,7 @@ if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
    let vConsole = new Vconsole()
 }
 class Root extends Component {
+	
 	render() {
       return  (
          <Provider store={store}>
