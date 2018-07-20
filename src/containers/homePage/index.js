@@ -103,7 +103,7 @@ const operateArr=[
     {
        icon: require('../../static/images/pandian.png'),
        text: '盘点',
-       link:'sdfffff'
+       link:'/Inventory'
     }
 
 ]

@@ -23,7 +23,7 @@ import MOpicking from './containers/MO-picking'
 import MoSaleReturn from './containers/MoSalesReturn'
 import PoSalesReturn from './containers/PoSalesReturn'
 import SPSalesReturn from './containers/SPSalesReturn'
-
+import Inventory from './containers/Inventory'
 import Vconsole from 'vconsole'
 import './static/css/app.scss'
 import './static/css/wmsui.scss'
@@ -51,6 +51,7 @@ class Root extends Component {
 					   <Route path='/MoSaleReturn'  component={MoSaleReturn} />
 					   <Route path='/PoSalesReturn'  component={PoSalesReturn} />
 					   <Route path='/SPSalesReturn'  component={SPSalesReturn} />
+					   <Route path='/Inventory'  component={Inventory} />
 					   <Route path="/Login" component={Login}/>
 					   <Route path='/404' component={NotFound} />
 					   <Redirect from='*' to='/404' />
