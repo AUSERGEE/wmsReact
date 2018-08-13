@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const config = require('./webpack.config');
-config.entry.app.unshift("webpack-dev-server/client?http://localhost:3000/", "webpack/hot/only-dev-server");
+config.entry.app.unshift("webpack-dev-server/client?http://localhost:3004/", "webpack/hot/only-dev-server");
 
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
@@ -29,9 +29,9 @@ new WebpackDevServer(webpack(config), {
             pathRewrite: {"^/mobilecdn" : ""}
         }
     }
-}).listen(3000, 'localhost', function(err) {
+}).listen(3004, 'localhost', function(err) {
     if (err) {
         console.log(err);
     }
-    console.log('Listening at localhost:3000');
+    console.log('Listening at localhost:3004');
 });

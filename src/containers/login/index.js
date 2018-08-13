@@ -21,7 +21,49 @@ class Login extends Component {
    render() {
       return (
       	<div className="loginSection">
-          <div className="logoArea">
+          <div className="LogoBox">
+              <div className="logoWarp">
+                  <img src={require('../../static/images/wmsLogo2.png')} />
+              </div> 
+              <div className="rightRadius">
+                  <div className="radius-item"></div>
+              </div>
+              <div className="leftRadius">
+                  <div className="radius-item"></div>
+              </div>
+          </div>
+          
+          <div className="LoginBox">
+               
+               <p style={{margin:'0px 0 33px 0',paddingTop:'37px',fontSize:'20px',color:'#666',textAlign:'center'}}>系统登录</p>
+               <List className="loginFormBox">
+                  <InputItem
+                    clear
+                    placeholder="请在此填写帐号"
+                    className={this.state.formActive=='user'?'formActive':''}
+                    ref={el => this.autoFocusInst = el}
+                    value={this.state.user}
+                    onChange={val=>this.handleChange('user',val)}
+                    onFocus={()=>{this.setState({formActive:'user'})}}
+                  >帐&emsp;&emsp;号</InputItem>
+                  <InputItem
+                    clear
+                    placeholder="请在此填写密码"
+                    type="password"
+                    className={this.state.formActive=='pwd'?'formActive':''}
+                    ref={el => this.autoFocusInst = el}
+                    value={this.state.pwd}
+                    onChange={val=>this.handleChange('pwd',val)}
+                    onFocus={()=>{this.setState({formActive:'pwd'})}}
+                  >密&emsp;&emsp;码</InputItem>
+                
+                </List>
+                <WhiteSpace />
+                <div className='btnBox loginBtnBox'>
+                    <Button type="primary" onClick={this.loginFun.bind(this)}>登录</Button>
+                </div>
+          </div>
+          {/* <div className="logoArea">
                <img src={require('../../static/images/wmsLogo.png')} />
           </div>
       	 	<p style={{margin:'23px 0 50px 0',fontSize:'20px',color:'#0097E5',textAlign:'center'}}>系统登录</p>
@@ -50,7 +92,7 @@ class Login extends Component {
 	        <WhiteSpace />
 	        <div className='btnBox'>
               <Button type="primary" onClick={this.loginFun.bind(this)}>登录</Button>
-          </div>
+          </div> */}
           <div className="copyrightBar">
               <p>Copyright @ 2018  深圳创维数字技术有限公司  版权所有</p>
           </div>
@@ -77,6 +119,19 @@ class Login extends Component {
       //  axios.get('http://wmspda.skyworthdigital.com:9001/webApi/api/PDAService/GetCheckUserAndPwd?user=a1&pwd=a1').then(function(res){
       //    console.log(res)
       //  })
+
+       console.log(1212112121221222)
+        let userInfo=getItem('user')
+        let json_userInfo=userInfo?JSON.parse(userInfo):''
+        //刷新页面后如果有用户信息的缓存，那么存起来
+        //如果没有，说明没有登录，直接跳转到登录页面
+        console.log(json_userInfo,'登录判断')
+        if(json_userInfo.user){
+           json_userInfo.loginTip = false
+           this.props.userLoginActions.userState(json_userInfo)
+           console.log('登录判断222')
+           this.props.history.push('/')
+        }
    }
    auotLogin() {  //自动登录
      setTimeout(function(){
@@ -119,9 +174,9 @@ class Login extends Component {
             this.props.userLoginActions.userState(userInfo)  //vuex
             setItem('user',JSON.stringify(userInfo))   //localstorge
             this.props.history.push('/')
-          }else{
+          }else{  //登录失败时显示错误信息
              Toast.hide()
-             this.magAlert('登录验证失败，请联系管理员！')
+             this.magAlert(res.messageResult.ErrorMessage)
           }
       })
    	  

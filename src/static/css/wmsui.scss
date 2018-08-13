@@ -1,3 +1,8 @@
+body {
+    background-color: #f4f4f4!important;
+    font-size: 14px;
+  }
+
 .wms-modal-mask{
     position: fixed;
     top: 0;
@@ -63,4 +68,161 @@
     line-height: 1;
     color: #000;
     text-align: center;
+}
+
+
+.skinTag{
+    display:inline-block;
+    width:22px;
+    height:22px;
+    background: blue;
+    margin-left:8px;
+    box-sizing: content-box;
+    vertical-align: middle;
+}
+.skinTag0{
+    background:#5078f0;
+}
+.skinTag1{
+    background:#14c1c8;
+}
+.skinTag2{
+    background:#ef5227;
+}
+.skinTag3{
+    background:#4a4a4a;
+}
+.skinTag.active{
+    border:2px solid orange;
+}
+.skinBox.am-list-item .am-list-line .am-list-extra{
+    -webkit-flex-basis: 60%;
+    -ms-flex-preferred-size: 60%;
+    flex-basis: 60%;
+}
+
+.useImgBox{
+    position:absolute;
+    top:17px;
+    left:22px;
+    width:50px;
+    height:50px;
+    overflow: hidden;
+    border-radius:50%;
+
+}
+.useImgBox>img{
+    width:100%;
+    height:100%;
+    margin:0;
+}
+.usetTxtBox{
+    padding-left:76px;
+    padding-top:7px;
+}
+.usetTxtBox p{
+    color:#eee;
+    font-size:14px;
+    line-height:20px;
+}
+.usetTxtBox .Tit_p{
+  color:#FFF;
+  font-size:16px;
+  line-height:25px;
+}
+
+.my-drawer {
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    margin-top:45px;
+}
+.my-drawer .am-drawer-sidebar {
+    background-color: #fff;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.my-drawer .am-drawer-sidebar .am-list {
+    width: 300px;
+    padding: 0;
+}
+.TitWarp{
+    width: 58px;
+    margin: 0 auto;
+}
+
+.my-drawer.am-drawer.am-drawer-right .am-drawer-draghandle{
+    width:0px;
+}
+
+.rightRadius{
+    width: 88px;
+    height: 14px;
+    overflow: hidden;
+    position: absolute;
+    bottom: -13px;
+    right: 0;
+}
+.rightRadius .radius-item{
+    position: absolute;
+    bottom: -1px;
+    right: -79px;
+    width: 544px;
+    height: 69px;
+    background: #4481f3;
+    border-radius: 50%;
+}
+.leftRadius{
+    width:88px;
+    height: 14px;
+    overflow: hidden;
+    position: absolute;
+    bottom: -13px;
+    left: 0;
+}
+.leftRadius .radius-item{
+    position: absolute;
+    bottom: -1px;
+    left: -79px;
+    width: 544px;
+    height: 69px;
+    background: #5574ee;
+    border-radius: 50%;
+}
+
+
+.LogoBox{
+    height:194px;
+    background: linear-gradient(157deg,#7360E8,#4281F3);
+    position:relative;
+    z-index:-1;
+}
+.logoWarp{
+    width:120px;
+    padding-top:89px;
+    margin:0 auto;
+
+}
+.logoWarp>img{
+    width:100%;
+    height:auto;
+}
+.LoginBox{
+    width:89%;
+    background:#FFF;
+    height:352px;
+    border-radius:12px;
+    box-shadow:2px 2px 8px #b3b3b3;
+    margin:0 auto;
+    margin-top:-50px;
+}
+.loginFormBox{
+    width:88%;
+    margin:0 auto;
+}
+.loginBtnBox{
+  padding: 10px 30px;
+}
+
+.loginFormBox .am-list-item .am-input-label{
+    color:#999;
 }

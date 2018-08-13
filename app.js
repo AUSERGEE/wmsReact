@@ -20,25 +20,9 @@ app.use(webpackDevMiddleware(compiler, {
     }
 }));
 app.use(WebpackHotMiddleware(compiler));
-const kugou = proxy('/kugou', {
-    target: 'http://m.kugou.com/',
-    changeOrigin: true,
-    pathRewrite: {"^/kugou": ""}
-});
-const yy_kugou = proxy('/yy_kugou', {
-    target: 'http://www.kugou.com/yy/',
-    changeOrigin: true,
-    pathRewrite: {"^/yy_kugou": ""}
-});
-const mobilecdn = proxy('/mobilecdn', {
-    target: 'http://mobilecdn.kugou.com',
-    changeOrigin: true,
-    pathRewrite: {"^/mobilecdn": ""}
-});
-app.use('/kugou/*', kugou);
-app.use('/yy_kugou/*', yy_kugou);
-app.use('/mobilecdn/*', mobilecdn);
-const server = app.listen(3000, () => {
+
+
+const server = app.listen(3004, () => {
     const host = server.address().address;
     const port = server.address().port;
     console.log('Listening at http://%s:%s', host, port);

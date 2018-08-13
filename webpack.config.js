@@ -83,6 +83,6 @@ module.exports = {
             inject: 'body'
         }),
         new ExtractTextPlugin("css/style.css"),
-        new OpenBrowserPlugin({url: 'http://localhost:3000'})
+        new OpenBrowserPlugin({url: 'http://localhost:3004'})
     ]
 };

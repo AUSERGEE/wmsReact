@@ -13,6 +13,7 @@ import {
     Switch
   } from 'react-router-dom'
 import { isNull } from 'util';
+
 class MOpicking extends Component {
    constructor(props) {
    	  super(props)
@@ -28,7 +29,7 @@ class MOpicking extends Component {
    }
    
    render() {
-      
+   
       return (
       	<div>
             {
@@ -218,7 +219,6 @@ class MOpicking extends Component {
     }
 }
 const seasons = [
-   
       {
         label: '2013',
         value: '2013',
