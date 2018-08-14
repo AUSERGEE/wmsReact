@@ -8,6 +8,8 @@ const store = configureStore();
 import {HashRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
 import NotFound from './components/Common/NotFound';
 //import ReactCSSTransitionGroup from 'react-addons-css-transition-group' 
+import AnimatedRouter from 'react-animated-router'; //我们的AnimatedRouter组件
+import 'react-animated-router/animate.css'; //引入默认的动画样式定义 lxf:该css已经被修改过了
 
 import initReactFastclick from 'react-fastclick'
 
@@ -61,6 +63,7 @@ class Root extends Component {
 				<Router>
 				  <div>
 				    <AuthRoute></AuthRoute> 
+					<AnimatedRouter>
 					<Switch>
 					   {/* <Route path="/" exact component={AuthRoute}/> */}
 					   <Route path="/" exact component={HomePage}/>
@@ -77,7 +80,8 @@ class Root extends Component {
 					   <Route path="/Login" exact component={Login}/>
 					   <Route path='/404'  component={NotFound} />
 					   <Redirect from='*' to='/404' />
-				    </Switch>
+					   </Switch>
+				    </AnimatedRouter>
 	              </div>
 			    </Router>
 			 </div>
