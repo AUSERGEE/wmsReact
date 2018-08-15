@@ -237,3 +237,35 @@ body {
 //  from {opacity:0;}
 //  to {opacity:1;}
 // }
+
+
+/**********************************/
+.flexTbWarp{ margin:10px 12px;}
+.wmsTb{
+   margin:10px 0px;
+   position: relative;	
+}
+.tbHeader{
+	height:32px;
+	line-height:32px;
+	background:#e0e0e0;
+	color:#797979;
+}
+.wmsTb_Tbody .tb_tr:nth-child(odd){
+	height:28px;
+	line-height:28px;
+	background:#FFFFFF;
+	color:#666666;
+}
+.wmsTb_Tbody .tb_tr:nth-child(even){
+	height:28px;
+	line-height:28px;
+	background:#f3f3f3;
+	color:#666666;
+}
+.flex2{
+    -webkit-box-flex: 2!important;
+    -webkit-flex: 2!important;
+    -ms-flex: 2!important;
+    flex: 2!important;
+}

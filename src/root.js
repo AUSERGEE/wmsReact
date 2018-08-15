@@ -32,7 +32,7 @@ import Vconsole from 'vconsole'
 import './static/css/wmsui.scss'
 import {getItem, setItem} from './util/localStorage'
 
-//根据缓存判断加载哪个主题色样式文件
+//根据缓存判断加载哪个主题色样式文件，默认是app.js
 var aa=''
 if(getItem('skin')=='0'){
 	aa='app'
@@ -63,24 +63,24 @@ class Root extends Component {
 				<Router>
 				  <div>
 				    <AuthRoute></AuthRoute> 
-					<AnimatedRouter>
-					<Switch>
-					   {/* <Route path="/" exact component={AuthRoute}/> */}
-					   <Route path="/" exact component={HomePage}/>
-					   <Route path="/Recipien" exact component={Recipien}/>
-					   <Route path="/RecipienDtl" exact component={RecipienDtl}/>
-					   <Route path="/RecipienCheckout" exact component={RecipienCheckout}/>
-					   <Route path='/SparesRece' exact component={SparesRece} />
-					   <Route path='/MOpicking' exact component={MOpicking} />
-					   <Route path='/MoSaleReturn' exact component={MoSaleReturn} />
-					   <Route path='/PoSalesReturn' exact component={PoSalesReturn} />
-					   <Route path='/SPSalesReturn' exact component={SPSalesReturn} />
-					   <Route path='/Inventory' exact component={Inventory} />
-					   <Route path='/Prepare' exact component={Prepare} />
-					   <Route path="/Login" exact component={Login}/>
-					   <Route path='/404'  component={NotFound} />
-					   <Redirect from='*' to='/404' />
-					   </Switch>
+					<AnimatedRouter>  {/*引入第三方路由切换动画组件*/}
+						<Switch>
+						{/* <Route path="/" exact component={AuthRoute}/> */}
+						<Route path="/" exact component={HomePage}/>
+						<Route path="/Recipien" exact component={Recipien}/>
+						<Route path="/RecipienDtl" exact component={RecipienDtl}/>
+						<Route path="/RecipienCheckout" exact component={RecipienCheckout}/>
+						<Route path='/SparesRece' exact component={SparesRece} />
+						<Route path='/MOpicking' exact component={MOpicking} />
+						<Route path='/MoSaleReturn' exact component={MoSaleReturn} />
+						<Route path='/PoSalesReturn' exact component={PoSalesReturn} />
+						<Route path='/SPSalesReturn' exact component={SPSalesReturn} />
+						<Route path='/Inventory' exact component={Inventory} />
+						<Route path='/Prepare' exact component={Prepare} />
+						<Route path="/Login" exact component={Login}/>
+						<Route path='/404'  component={NotFound} />
+						<Redirect from='*' to='/404' />
+						</Switch>
 				    </AnimatedRouter>
 	              </div>
 			    </Router>
