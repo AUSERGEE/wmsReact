@@ -43,8 +43,7 @@ class MOpicking extends Component {
             <WhiteSpace/>
             <List >
                 {
-                  this.state.lineData.length>0
-                  ?(
+                  
                     <Picker data={this.state.lineData} cols={1}  className="forss" 
                             
                             onOk={(v) => {
@@ -56,9 +55,7 @@ class MOpicking extends Component {
                             value={this.state.pickerValue}>
                         <List.Item arrow="horizontal">选择线体</List.Item>
                     </Picker>
-                  ):(
-                    <List.Item >...</List.Item>
-                  )
+                  
 
                 }
                 
@@ -117,24 +114,27 @@ class MOpicking extends Component {
     }
     componentDidMount(){
        this.GetDataByLine()
-       
     }
-    
-    componentWillReceiveProps(nextProps){
-        if (nextProps.location.pathname== "/MOpicking") {
-            this.getSendingMaterial()
-        } 
-    }
+    //忘记这个是干什么的？暂时注释掉
+    // componentWillReceiveProps(nextProps){
+    //     if (nextProps.location.pathname== "/MOpicking") {
+    //         this.getSendingMaterial()
+    //         console.log(nextProps,101)
+    //     } 
+    // }
    
     GetDataByLine(){
+        var lineData=[]
+        var self=this
         this.getMaterialLineData().then((res)=>{
             if(res.messageResult.IsSuccess){
                 if(res.sResultJsonStr==""){
-                    Toast.fail('获取线体失败', 1)
+                    self.openModal('暂无MO领料')
                     return 
                 }
                 let lineArr=JSON.parse(res.sResultJsonStr)
-                let lineData=[]
+                
+                //[{'线体':22},{'线体':23}]
                 lineArr.forEach((item,index)=>{
                     lineData.push({label:item['线体'],value:item['线体']})
                 })
@@ -198,7 +198,7 @@ class MOpicking extends Component {
         })
     }
     activeTr(trItem){
-        console.log(trItem)
+        console.log(trItem,200000)
         this.props.history.push({
             pathname:'/MOpicking/MOitemDtl',
             query:{

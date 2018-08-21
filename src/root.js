@@ -67,17 +67,17 @@ class Root extends Component {
 						<Switch>
 						{/* <Route path="/" exact component={AuthRoute}/> */}
 						<Route path="/" exact component={HomePage}/>
-						<Route path="/Recipien" exact component={Recipien}/>
-						<Route path="/RecipienDtl" exact component={RecipienDtl}/>
-						<Route path="/RecipienCheckout" exact component={RecipienCheckout}/>
-						<Route path='/SparesRece' exact component={SparesRece} />
-						<Route path='/MOpicking' exact component={MOpicking} />
-						<Route path='/MoSaleReturn' exact component={MoSaleReturn} />
-						<Route path='/PoSalesReturn' exact component={PoSalesReturn} />
-						<Route path='/SPSalesReturn' exact component={SPSalesReturn} />
-						<Route path='/Inventory' exact component={Inventory} />
-						<Route path='/Prepare' exact component={Prepare} />
-						<Route path="/Login" exact component={Login}/>
+						<Route path="/Recipien"  component={Recipien}/>
+						<Route path="/RecipienDtl"  component={RecipienDtl}/>
+						<Route path="/RecipienCheckout"  component={RecipienCheckout}/>
+						<Route path='/SparesRece'  component={SparesRece} />
+						<Route path='/MOpicking'  component={MOpicking} />
+						<Route path='/MoSaleReturn'  component={MoSaleReturn} />
+						<Route path='/PoSalesReturn'  component={PoSalesReturn} />
+						<Route path='/SPSalesReturn'  component={SPSalesReturn} />
+						<Route path='/Inventory'  component={Inventory} />
+						<Route path='/Prepare'  component={Prepare} />
+						<Route path="/Login"  component={Login}/>
 						<Route path='/404'  component={NotFound} />
 						<Redirect from='*' to='/404' />
 						</Switch>
@@ -88,6 +88,7 @@ class Root extends Component {
 	     </Provider>
       )
 	}
+	//MOpicking路由添加exact属性后会导致其子路由无法访问
 	componentDidMount(){
 		//如果开了调试工具，则显示调试工具
 		//由于在react中没有找到页面跳转的事件，或者其他的触发方式，

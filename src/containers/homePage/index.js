@@ -39,7 +39,7 @@ class Login extends Component {
               mode="dark" 
               rightContent={[<Icon key="1" type="ellipsis" onClick={this.onOpenChange.bind(this)}/>]}>
               <div className="TitWarp">
-                  <img src={require('../../static/images/wmsLogo2.png')} />
+                  <img src={require('../../static/images/wmsTitImg.png')} />
               </div> 
             </NavBar>
       	 	<div style={{display:'none'}}>
@@ -168,7 +168,7 @@ const operateArr=[
        link:'/MOpicking'
     },
     {
-       icon: require('../../static/images/tuiliao.png'),
+       icon: require('../../static/images/motuiliao.png'),
        text: 'MO退料',
        link:'/MoSaleReturn'
     },
@@ -178,7 +178,7 @@ const operateArr=[
        link:'/PoSalesReturn'
     },
     {
-       icon: require('../../static/images/tuiliao.png'),
+       icon: require('../../static/images/bptuiliao.png'),
        text: '备件退料',
        link:'/SPSalesReturn'
     },

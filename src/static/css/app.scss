@@ -96,36 +96,6 @@ $font14:14px;
   }
 }
 
-/**********************************/
-.flexTbWarp{ margin:10px 12px;}
-.wmsTb{
-   margin:10px 0px;
-   position: relative;	
-}
-.tbHeader{
-	height:32px;
-	line-height:32px;
-	background:#a9a9a9;
-	color:#FFFFFF;
-}
-.wmsTb_Tbody .tb_tr:nth-child(odd){
-	height:28px;
-	line-height:28px;
-	background:#FFFFFF;
-	color:#666666;
-}
-.wmsTb_Tbody .tb_tr:nth-child(even){
-	height:28px;
-	line-height:28px;
-	background:rgb(238, 238, 238);
-	color:#666666;
-}
-.flex2{
-    -webkit-box-flex: 2!important;
-    -webkit-flex: 2!important;
-    -ms-flex: 2!important;
-    flex: 2!important;
-}
 
 /**************其他*****************/
 .btnBox{ padding:10px 12px; }
