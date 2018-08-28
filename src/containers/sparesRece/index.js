@@ -115,7 +115,7 @@ class SparesRece extends Component {
              </List>
              <div className="bottomBar x-border-top">
                <div className="btnGroup">
-                   <Button type="primary" inline style={{ marginRight: '2%',width:'23%'}} onClick={this.temporarySave.bind(this)}>暂存</Button>
+                   
                    <Button type="primary" inline 
                            style={{ marginRight: '2%',width:'23%',padding:'4px',lineHeight:'49px'}}
                            className="buttonFontSmall"
@@ -123,12 +123,14 @@ class SparesRece extends Component {
                                this.props.history.push('/SparesRece/RecipienConfirm')
                            }}
                            >收货查看</Button>
-                   <Button type="primary" inline style={{ marginRight: '2%',width:'23%'}} onClick={()=>{this.clearForm()}}> 清除</Button>
+                   <Button type="primary" inline style={{ marginRight: '2%',width:'23%'}} onClick={this.temporarySave.bind(this)}>暂存</Button>
                    {
                        process.env.NODE_ENV !== 'production'
-                       ?<Button type="primary" inline style={{ width:'23%'}} onClick={()=>{this.pcScanCode()}}>模拟扫码</Button>
-                       :<Button type="primary" inline style={{ width:'23%'}} onClick={()=>{this.scanQrCode()}}>扫码</Button>
+                       ?<Button type="primary" inline style={{ marginRight: '2%', width:'23%'}} onClick={()=>{this.pcScanCode()}}>模拟扫码</Button>
+                       :<Button type="primary" inline style={{ marginRight: '2%', width:'23%'}} onClick={()=>{this.scanQrCode()}}>扫码</Button>
                    }
+                   <Button type="primary" inline style={{width:'23%'}} onClick={()=>{this.clearForm()}}> 清除</Button>
+                  
                    
                 </div>
              </div>

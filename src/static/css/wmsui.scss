@@ -2,6 +2,13 @@ body {
     background-color: #f4f4f4!important;
     font-size: 14px;
   }
+
+
+// 兼容钉钉安卓手机端页面白屏问题--20180821-by：lxf
+body,body>#root,body>#root>div,body>#root>div>div{
+    min-height:100%;
+}
+
 .wms-modal-mask{
     position: fixed;
     top: 0;
@@ -267,4 +274,33 @@ body {
     -webkit-flex: 2!important;
     -ms-flex: 2!important;
     flex: 2!important;
+}
+
+.cirBtn{
+    
+    background-size: 100%;
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+    border-radius: 50%;
+    position: absolute;
+    top: -61px;
+    left: 50%;
+    margin-left: -56px;
+}
+.cirBtn .btnBg{
+    position: absolute;
+    top:3px;
+    left:3px;
+    right:3px;
+    bottom:3px;
+    border-radius: 50%;
+    z-index: -1;
+}
+.clBtn{
+    display: inline-block;
+    font-size: 16px;
+    line-height: 58px;
+    text-align: center;
+    height: 58px;
 }

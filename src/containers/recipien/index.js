@@ -113,14 +113,13 @@ class Recipien extends Component {
             
             <div className="bottomBar">
                <div className="btnGroup">
-                   <Button type="primary" inline style={{ marginRight: '2%',width:'40%'}} onClick={()=>this.props.history.push('/RecipienDtl')}>收货查看</Button>
-                   <Button type="primary" inline style={{ marginRight: '2%',width:'28%'}} onClick={this.reset.bind(this)}>清除</Button>
+                   <div style={{ marginRight: '0%',width:'30%'}} className="clBtn" onClick={()=>this.props.history.push('/RecipienDtl')}>收货查看</div>
                    {
                        process.env.NODE_ENV !== 'production'
-                       ?<Button type="primary" inline style={{ width:'28%'}} onClick={this.scanCodeFunDev.bind(this)}>模拟扫码</Button>
-                       :<Button type="primary" inline style={{ width:'28%'}} onClick={this.scanCodeFun.bind(this)}>扫码</Button>
+                       ?<div className="cirBtn" onClick={this.scanCodeFunDev.bind(this)}><div className="btnBg"></div><img src={require('../../static/images/scanbtn.png')}/></div>
+                       :<div className="cirBtn" onClick={this.scanCodeFun.bind(this)}><div className="btnBg"></div><img src={require('../../static/images/scanbtn.png')}/></div>
                    }
-                   
+                   <div style={{ marginRight: '0%',width:'30%',float:'right'}} className="clBtn" onClick={this.reset.bind(this)}>清除</div>
                 </div>
             </div>
             <Modal

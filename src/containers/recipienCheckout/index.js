@@ -73,7 +73,7 @@ class RecipienCheckout extends Component {
                   value={this.state.meterial}
               >物料</InputItem>
              </List>
-             <div className="bottomBar">
+             {/* <div className="bottomBar">
                <div className="btnGroup">
                    <Button type="primary" inline style={{ marginRight: '2%',width:'32%'}} onClick={this.saveData.bind(this)}>确认</Button>
                    <Button type="primary" inline style={{ marginRight: '2%',width:'32%'}} onClick={this.reset.bind(this)} >清除</Button>
@@ -83,6 +83,17 @@ class RecipienCheckout extends Component {
                        :<Button type="primary" inline style={{ width:'32%'}} onClick={this.scanQrCode.bind(this)}>扫码</Button>
                    }
                    
+                </div>
+             </div> */}
+             <div className="bottomBar">
+               <div className="btnGroup">
+                   <div style={{ marginRight: '0%',width:'30%'}} className="clBtn" onClick={this.saveData.bind(this)}>确认</div>
+                   {
+                       process.env.NODE_ENV !== 'production'
+                       ?<div className="cirBtn" onClick={this.pcScanCode.bind(this)}><div className="btnBg"></div><img src={require('../../static/images/scanbtn.png')}/></div>
+                       :<div className="cirBtn" onClick={this.scanQrCode.bind(this)}><div className="btnBg"></div><img src={require('../../static/images/scanbtn.png')}/></div>
+                   }
+                   <div style={{ marginRight: '0%',width:'30%',float:'right'}} className="clBtn" onClick={this.reset.bind(this)}>清除</div>
                 </div>
              </div>
              <Modal

@@ -13,7 +13,8 @@ let recipienInitState={
      resetRecepientForm:false,
      QRCode:null,
      QRCodeDate:null,
-     spareOrderId:''
+     spareOrderId:'',
+     moPickerArr:[]
 }
 const recipienState = (state=recipienInitState,action)=>{
     switch (action.type){

@@ -5,6 +5,8 @@ import {bindActionCreators} from 'redux'
 import * as userLoginAction from '../../actions/userState'
 import {getItem, setItem} from '../../util/localStorage'
 import { Grid,List,Toast,Drawer,Icon } from 'antd-mobile'
+import 'dingtalk-jsapi/entry/union'; // 如果你想要在此代码在PC端和移动端都执行，那你可以如此引入
+import scan from 'dingtalk-jsapi/api/biz/util/scan'; // 按需引入方法
 class Login extends Component {
    constructor(props) {
    	  super(props)
@@ -32,6 +34,9 @@ class Login extends Component {
                              <i  className={`skinTag skinTag3 ${this.state.skinIndex==3?'active':''}`}  onClick={this.toggleSkin.bind(this,3)}></i>
                          </span>
                      }>主题色</Item>
+          <Item extra={
+                         <span style={{color:"#0097e5"}} onClick={this.ddScan.bind(this)}>使用</span>
+                     }>钉钉扫码</Item>
       </List>);
       return (
       	<div>
@@ -87,6 +92,7 @@ class Login extends Component {
    }
    
    componentDidMount(){
+      
        //console.log(this.props.userState)
        if(this.props.userState.loginTip){
           Toast.info('登录成功',1, null, true)
@@ -101,6 +107,8 @@ class Login extends Component {
        this.setState({
            skinIndex:getItem('skin')===''?0:JSON.parse(getItem('skin'))
        })
+
+
        
    }
    //切换主题色
@@ -109,6 +117,19 @@ class Login extends Component {
       this.onOpenChange()
       this.loadingToast('主题色更换中..')
       location.reload()
+   }
+   //在钉钉的软件内调用钉钉的扫码JsApi
+   ddScan(){
+        scan({
+            type: 'all' , // type 为 all、qrCode、barCode，默认是all。
+            tips: "钉钉扫码",  //进入扫码页面显示的自定义文案
+            onSuccess: function(data) {
+              alert(data.text)
+            },
+            onFail : function(err) {
+                console.log(err,'扫码失败')
+            }
+        })
    }
    //九宫格元素点击跳转
    gridLink(el,index){

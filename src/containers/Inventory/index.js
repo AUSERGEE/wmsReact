@@ -70,7 +70,7 @@ class Inventory extends Component {
               >确认数量</InputItem>
             </List>
        
-            <div className="bottomBar">
+            {/* <div className="bottomBar">
                <div className="btnGroup">
                    <Button type="primary" inline style={{ marginRight: '2%',width:'32%'}} 
                       onClick={()=>{this.comfirm()}}
@@ -90,7 +90,18 @@ class Inventory extends Component {
                         )
                    }
                 </div>
-             </div>
+             </div> */}
+             <div className="bottomBar">
+               <div className="btnGroup">
+                   <div style={{ marginRight: '0%',width:'30%'}} className="clBtn" onClick={()=>this.comfirm()}>确定</div>
+                   {
+                       process.env.NODE_ENV !== 'production'
+                       ?<div className="cirBtn" onClick={()=>{this.pcScanCode()}}><div className="btnBg"></div><img src={require('../../static/images/scanbtn.png')}/></div>
+                       :<div className="cirBtn" onClick={this.scanQrCode.bind(this)}><div className="btnBg"></div><img src={require('../../static/images/scanbtn.png')}/></div>
+                   }
+                   <div style={{ marginRight: '0%',width:'30%',float:'right'}} className="clBtn" onClick={()=>this.reset()}>取消</div>
+                </div>
+            </div>
              <Modal
                 visible={this.state.prompt}
                 transparent

@@ -52,7 +52,7 @@ class MOpicking extends Component {
                                     this.getSendingMaterial()
                                 })
                             }} 
-                            value={this.state.pickerValue}>
+                            value={this.props.recipienState.moPickerArr}>
                         <List.Item arrow="horizontal">选择线体</List.Item>
                     </Picker>
                   
@@ -98,11 +98,11 @@ class MOpicking extends Component {
                    <Button type="primary" inline style={{ margin: '0 auto',width:'99%',display:'block'}} 
                            onClick={()=>{
                                console.log(this.state.lineData,'232')
-                               if(!this.state.pickerValue[0]){
+                               if(!this.props.recipienState.moPickerArr[0]){
                                   this.openModal('请选择线体')
                                   return
                                }
-                               this.props.history.push(`/MOpicking/MOdtl/${this.state.pickerValue[0]}`)}  
+                               this.props.history.push(`/MOpicking/MOdtl/${this.props.recipienState.moPickerArr[0]}`)}  
                            } >领料查看</Button>
                   
                 </div>
@@ -115,13 +115,13 @@ class MOpicking extends Component {
     componentDidMount(){
        this.GetDataByLine()
     }
-    //忘记这个是干什么的？暂时注释掉
-    // componentWillReceiveProps(nextProps){
-    //     if (nextProps.location.pathname== "/MOpicking") {
-    //         this.getSendingMaterial()
-    //         console.log(nextProps,101)
-    //     } 
-    // }
+    
+    componentWillReceiveProps(nextProps){
+        if (nextProps.location.pathname== "/MOpicking"&&this.props.recipienState.moPickerArr[0]) {
+            this.getSendingMaterial()
+            //console.log(nextProps,101)
+        } 
+    }
    
     GetDataByLine(){
         var lineData=[]
@@ -173,9 +173,9 @@ class MOpicking extends Component {
     getSendingMaterial() {
         let userCode=this.props.userState.user
         Toast.loading('loading...',0)
-        console.log(this.state.pickerValue)
+        console.log(this.props.recipienState.moPickerArr)
         let baseUrl='http://wmspda.skyworthdigital.com:9001/webApi/api/PDAMoSendingMaterial/getSendingMaterialByuserCodeAndLine?'
-        axios.get(`${baseUrl}userCode=${userCode}&line=${this.state.pickerValue[0]}`).then((res)=>{
+        axios.get(`${baseUrl}userCode=${userCode}&line=${this.props.recipienState.moPickerArr[0]}`).then((res)=>{
             return res.data
         }).then(res => {
             Toast.hide()
@@ -189,7 +189,10 @@ class MOpicking extends Component {
         })
     }
     pickCallback (v){
-        this.setState({pickerValue:v})
+        //this.setState({pickerValue:v})
+        this.props.recipienStateActions.recipienState({
+            moPickerArr:v
+        })
         return Promise.resolve()
     }
     openModal(text){
@@ -202,7 +205,7 @@ class MOpicking extends Component {
         this.props.history.push({
             pathname:'/MOpicking/MOitemDtl',
             query:{
-              line:this.state.pickerValue[0],
+              line:this.props.recipienState.moPickerArr[0],
               materialCode:trItem['物料号']
             }
         })

@@ -158,7 +158,6 @@ class MOdtl extends Component {
     //手机端扫描二维码
     scanQrCode(){
         let self=this
-        Toast.loading('loading...',0)
         if(!this.state.ifWxConfigReady){
             return false
         }else{
