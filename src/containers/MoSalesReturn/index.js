@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as wmsAction from '../../actions/wmsState'
 import WmsAlert from '../../components/Common/wmsAlert'
+import {pageInputScroll} from '../../util/pageInputScroll'
 import axios from 'axios'
 class MoSalesReturn extends Component {
    constructor(props) {
@@ -131,7 +132,67 @@ class MoSalesReturn extends Component {
     }
     componentDidMount(){
        this.getConfig()
+       //window.innerHeight
+       pageInputScroll()
     }
+    // pageInputScroll(){
+    //     let initWindowHeight=window.innerHeight
+    //     let self=this
+    //     setTimeout(() => {
+    //       let wrapDiv=document.getElementsByClassName('animated-router-forward-enter-done')[0]
+    //       //console.log(wrapDiv.style)
+    //       wrapDiv.style.minHeight =initWindowHeight+'px'
+             
+    //       }, 500);
+    //     window.onresize=function(){
+    //         if(initWindowHeight-window.innerHeight>initWindowHeight/4&&document.querySelectorAll(':focus').length>0){
+    //            //console.log(window.innerHeight,10)
+    //            if(self.offset(document.querySelectorAll(':focus')[0]).top>initWindowHeight/4){
+    //              document.body.scrollTop=self.offset(document.querySelectorAll(':focus')[0]).top-initWindowHeight/4
+    //            }
+    //         }else if(window.innerHeight-initWindowHeight<20){
+    //             document.body.scrollTop=0
+    //         }
+            
+    //     };
+    // }
+    // offset(element) {
+    //     var offest = {
+    //         top: 0,
+    //         left: 0
+    //     };
+     
+    //     var _position;
+     
+    //     getOffset(element, true);
+     
+    //     return offest;
+     
+    //     // 递归获取 offset, 可以考虑使用 getBoundingClientRect
+    //     function getOffset(node, init) {
+    //         // 非Element 终止递归
+    //         if (node.nodeType !== 1) {
+    //             return;
+    //         }
+    //         _position = window.getComputedStyle(node)['position'];
+     
+    //         // position=static: 继续递归父节点
+    //         if (typeof(init) === 'undefined' && _position === 'static') {
+    //             getOffset(node.parentNode);
+    //             return;
+    //         }
+    //         offest.top = node.offsetTop + offest.top - node.scrollTop;
+    //         offest.left = node.offsetLeft + offest.left - node.scrollLeft;
+     
+    //         // position = fixed: 获取值后退出递归
+    //         if (_position === 'fixed') {
+    //             return;
+    //         }
+     
+    //         getOffset(node.parentNode);
+    //     }
+    // }
+    
     getConfig() { 
         let url = location.href.split('#')[0] //获取锚点之前的链接
         Toast.loading('loading...',0)

@@ -5,6 +5,7 @@ import {bindActionCreators} from 'redux'
 import * as userLoginAction from '../../actions/userState'
 import {getItem,setItem} from '../../util/localStorage'
 import * as tool from '../../util/tools'
+import {pageInputScroll} from '../../util/pageInputScroll'
 import axios from 'axios'
 class Login extends Component {
    constructor(props) {
@@ -132,6 +133,10 @@ class Login extends Component {
            console.log('登录判断222')
            this.props.history.push('/')
         }
+
+        if(/Android/i.test(navigator.userAgent)){
+           pageInputScroll()
+        }
    }
    auotLogin() {  //自动登录
      setTimeout(function(){
@@ -171,7 +176,7 @@ class Login extends Component {
           if(res.messageResult.IsSuccess){   //登录成功后
             Toast.hide()
             userInfo.User_ScanerID=res.UserInfo.User_ScanerID
-            this.props.userLoginActions.userState(userInfo)  //vuex
+            this.props.userLoginActions.userState(userInfo)  //redux
             setItem('user',JSON.stringify(userInfo))   //localstorge
             this.props.history.push('/')
           }else{  //登录失败时显示错误信息

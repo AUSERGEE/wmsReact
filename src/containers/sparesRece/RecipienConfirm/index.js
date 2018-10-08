@@ -4,6 +4,7 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as wmsAction from '../../../actions/wmsState'
+
 class RecipienConfirm extends Component {
    constructor(props) {
    	  super(props)
@@ -75,6 +76,7 @@ class RecipienConfirm extends Component {
     componentDidMount(){
         this.GetGiftsGRNDetailList()
         console.log(this.props.children)
+        
     }
     GetGiftsGRNDetailList() {
         Toast.loading('loading...',0)

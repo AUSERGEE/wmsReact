@@ -6,6 +6,7 @@ import {bindActionCreators} from 'redux'
 import * as wmsAction from '../../actions/wmsState'
 import WmsAlert from '../../components/Common/wmsAlert'
 import axios from 'axios'
+import {pageInputScroll} from '../../util/pageInputScroll'
 import {
     Route,
     Switch
@@ -143,6 +144,7 @@ class SparesRece extends Component {
     componentDidMount(){
        this.getConfig()
        this.getOrderId()  //页面刷新时重新请求单号
+       pageInputScroll()
     }
     getConfig() { 
         let url = location.href.split('#')[0] //获取锚点之前的链接

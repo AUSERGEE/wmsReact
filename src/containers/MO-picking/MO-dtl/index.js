@@ -24,7 +24,47 @@ class MOdtl extends Component {
                    领料查看
             </NavBar>
             <WhiteSpace/>
-            <div className="flexTbWarp">
+            <div className="wmsTb_wrap">
+               <div className="wmsTb x-border">
+                    <div className="tbHeader">
+                            <div className="tb_w_sub">扫描汇总数量</div>
+                            <div className="tb_w_sub">线体</div>
+                            <div className="tb_w_sub">物料</div>
+                            <div>数量</div>
+                            <div>储位</div>
+                    </div>
+                    <div className="wmsTb_Tbody">
+                    {
+                        this.state.tableArr
+                        ?(  this.state.tableArr.map((item,index)=>{
+                                return (
+                                    <div key={index} 
+                                         className="tb_tr"
+                                    >
+                                        <div className="tb_td tb_w_sub">{item['扫描汇总数量']}</div>
+                                        <div className="tb_td tb_w_sub">{item['线体']}</div>
+                                        <div className="tb_td tb_w_sub">{item['物料']}</div>
+                                        <div className="tb_td">{item['线体']}</div>
+                                        <div className="tb_td">{item['线体']}</div>
+                                    </div>
+                                )
+                            })
+                         ):(
+                            
+                                
+                                    [1,2,3,4,5,6].map((item,index)=>{
+                                        return (
+                                            <div key={index} className='tb_tr'></div>
+                                        )
+                                    })
+                                
+                            
+                         )
+                    }
+                 </div>
+              </div>
+           </div>
+            {/* <div className="flexTbWarp">
                <div className="wmsTb x-border">
                    <Flex className="tbHeader">
                         <Flex.Item>扫描汇总数量</Flex.Item>
@@ -53,7 +93,7 @@ class MOdtl extends Component {
                     }
                  </div>
               </div>
-           </div>
+           </div> */}
 
              <div className="bottomBar">
                <div className="btnGroup">
@@ -132,7 +172,7 @@ class MOdtl extends Component {
                    `userCode=${userCode}&line=${line}`).then((res)=>{
             return res.data
         }).then(res => {
-            console.log(res)
+            console.log(res,222)
             if(res.messageResult.IsSuccess){
                 this.setState({
                     tableArr:JSON.parse(res.sResultJsonStr)

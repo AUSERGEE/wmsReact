@@ -19,7 +19,7 @@ $themeColor:#ef5227;
 .wmsCheckBox>.unCheckedtab{font-size:26px; color:#c3c3c3;position: absolute; top:0px;}
 .wmsCheckBox>.checkedtab{font-size:26px; color:$themeColor;position: absolute; top:0px;}
 
-.subPage{position:fixed; top:0; left:0; right:0; bottom:0;background:#FFF; z-index:2;}
+.subPage{position:fixed; top:0; left:0; right:0; bottom:0;background:#FFF; z-index:22;}
 /**************登录页面*****************/
 @mixin bottomAfterSet {
     right: 19px!important;
@@ -99,7 +99,7 @@ $font14:14px;
 
 /**************其他*****************/
 .btnBox{ padding:10px 12px; }
-.bottomBar{position:fixed; bottom:0; left:0; right:0; height:72px; border-top:1px solid #dddddd; background:#FFF;}
+.bottomBar{position:fixed; bottom:0; left:0; right:0; height:72px; border-top:1px solid #dddddd; background:#FFF; z-index:9;}
 .btnGroup{margin:6px 12px 0px;}
 .btnGroup .am-button{
 	height: 58px;

@@ -95,7 +95,8 @@ class MOpicking extends Component {
 
              <div className="bottomBar">
                <div className="btnGroup">
-                   <Button type="primary" inline style={{ margin: '0 auto',width:'99%',display:'block'}} 
+                   
+                   <Button type="primary" inline style={{ margin: '0 auto',marginRight: '2%',width:'49%'}} 
                            onClick={()=>{
                                console.log(this.state.lineData,'232')
                                if(!this.props.recipienState.moPickerArr[0]){
@@ -104,6 +105,17 @@ class MOpicking extends Component {
                                }
                                this.props.history.push(`/MOpicking/MOdtl/${this.props.recipienState.moPickerArr[0]}`)}  
                            } >领料查看</Button>
+
+                   {
+                       process.env.NODE_ENV !== 'production'
+                       ?(<Button type="primary" inline style={{ width:'49%'}} 
+                             onClick={()=>{this.pcScanCode()}} >
+                             模拟扫码</Button>
+                        ):(<Button type="primary" inline style={{ width:'49%'}} 
+                                   onClick={this.scanQrCode.bind(this)}
+                           >扫码</Button>
+                        )
+                   }
                   
                 </div>
              </div>
@@ -114,6 +126,7 @@ class MOpicking extends Component {
     }
     componentDidMount(){
        this.GetDataByLine()
+       this.getConfig()
     }
     
     componentWillReceiveProps(nextProps){
@@ -122,7 +135,48 @@ class MOpicking extends Component {
             //console.log(nextProps,101)
         } 
     }
-   
+    getConfig() { 
+        let url = location.href.split('#')[0] //获取锚点之前的链接
+        Toast.loading('loading...',0)
+        axios.get(`http://wmspda.skyworthdigital.com:9001/webApi/api/Common/GetSignature?url=${url}`).then((res)=>{
+            return res.data
+        }).then(res => {
+            Toast.hide()
+            console.log("this.wxInit(res)")
+            this.wxInit(res);
+        }).catch(e=>{
+            console.log(e)
+            Toast.hide()
+            Toast.fail('调用扫码功能遇到了错误', 1);
+        })
+    }
+    wxInit(res) {
+        let self=this
+        wx.config({
+            debug: false,
+            appId: 'ww58877fbb525792d1',
+            timestamp: res.timestamp,
+            nonceStr: res.nonceStr,
+            signature: res.signature,
+            jsApiList: ['checkJsApi', 'scanQRCode']
+      });
+      wx.ready(function() {
+        wx.checkJsApi({
+              jsApiList: ['scanQRCode'],
+              success: function (res) {
+                  console.log('wx.checkJsApi-return:'+JSON.stringify(res))
+              }
+        });
+        console.log('AAAAA')
+        self.setState({
+            ifWxConfigReady:true
+        })
+
+      });
+      wx.error(function(err) {
+          console.log(JSON.stringify(err))
+      });
+    }
     GetDataByLine(){
         var lineData=[]
         var self=this
@@ -187,6 +241,47 @@ class MOpicking extends Component {
             Toast.hide()
             Toast.fail('获取线体错误', 1);
         })
+    }
+
+    //pc端调试-模拟手机端扫码效果
+    pcScanCode(){
+        let barcode='40017771_&_474R-G57190-0060_&_WH025_&_15000_&_IC MC74HC125ADR2G_&_1_&_15000_&_2017-3-6'
+        
+        this.searchBarcode(barcode)
+    }
+    //手机端扫描二维码
+    scanQrCode(){
+        let self=this
+        if(!this.state.ifWxConfigReady){
+            return false
+        }else{
+         wx.scanQRCode({
+             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+             scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+             success: function (res) {
+                 Toast.hide()
+                 var result = res.resultStr // 当needResult 为 1 时，扫码返回的结果
+                 self.searchBarcode(result)
+             }
+         });
+ 
+        }
+    }
+    searchBarcode(barcode){
+        let secondStr=barcode.split('_&_')[1]
+        console.log(secondStr)
+        let self=this
+        let ifFind=false
+        this.state.materialData.map((item,index)=>{
+            if(item['物料号']==secondStr){
+                ifFind=true
+                self.activeTr(item)
+                
+            }
+        })
+        if(!ifFind){
+            Toast.fail('没有对应选项', 2);
+        }
     }
     pickCallback (v){
         //this.setState({pickerValue:v})

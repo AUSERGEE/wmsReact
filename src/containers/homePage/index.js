@@ -34,9 +34,9 @@ class Login extends Component {
                              <i  className={`skinTag skinTag3 ${this.state.skinIndex==3?'active':''}`}  onClick={this.toggleSkin.bind(this,3)}></i>
                          </span>
                      }>主题色</Item>
-          <Item extra={
+          {/* <Item extra={
                          <span style={{color:"#0097e5"}} onClick={this.ddScan.bind(this)}>使用</span>
-                     }>钉钉扫码</Item>
+                     }>钉钉扫码</Item> */}
       </List>);
       return (
       	<div>

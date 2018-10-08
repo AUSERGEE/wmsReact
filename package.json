@@ -1,5 +1,5 @@
 {
-  "name": "react-music",
+  "name": "react-wms",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:chenjun1127/react-music.git"
+    "url": "git+ssh://git@github.com:chenjun1127/react-wms.git"
   },
   "keywords": [
     "reactjs",

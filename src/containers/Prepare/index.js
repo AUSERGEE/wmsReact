@@ -14,7 +14,7 @@ class Prepare extends Component {
           this.state = {
               prepareData:null,
               activeTrIndex:null,
-              spPrompt:true,
+              spPrompt:false,
               spcode:''
           }
     }
@@ -85,13 +85,13 @@ class Prepare extends Component {
                         >
                              模拟扫码</Button>
                         ):(<Button type="primary" inline style={{ width:'100%'}} 
-                            
+                            onClick={()=>{this.scanQrCode()}}
                            >扫码</Button>
                         )
                    }
                 </div>
              </div>
-             <Modal //
+             <Modal 
                 visible={this.state.spPrompt}
                 transparent
                 maskClosable={false}
@@ -167,11 +167,35 @@ class Prepare extends Component {
      }
      //pc端调试-模拟手机端扫码效果
      pcScanCode(){
-        let result='40017646_&_47FY-A10450-0100_&_GH052_&_*_&_*_&_*_&_1080000_&_2017-01-19'; //'32178156_&_0604-000000-01_&_MS011_&_100PCS_&_BLANK LABEL_&_1_&_100PCS_&_2017-07-20' 
+        let result='40017936_&_474M-Z11170-03_&_SH049_&_*_&_*_&_*_&_64000_&_2017-3-26'; //'32178156_&_0604-000000-01_&_MS011_&_100PCS_&_BLANK LABEL_&_1_&_100PCS_&_2017-07-20' 
         let barCode=result.replace(/&/g,'%26')
-        this.spcode=barCode;
+        //this.spcode=barCode;
+       
+        this.scanDataDealCode(barCode,1)
+
+
      }
      
+     scanQrCode(){
+        let self=this
+        if(!this.state.ifWxConfigReady){
+            return false
+        }else{
+         wx.scanQRCode({
+             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+             scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+             success: function (res) {
+                 var result = res.resultStr
+                 let barCode=result.replace(/&/g,'%26')
+                 this.scanDataDealCode(barCode,1)
+             }
+         });
+ 
+        }
+      
+ 
+    }
+
      getData(){
         let self=this,
             userCode=this.props.userState.user;
@@ -184,9 +208,14 @@ class Prepare extends Component {
             Toast.hide()
             console.log(res,110);
             if(res.messageResult.IsSuccess){
-                this.setState({
-                    prepareData:JSON.parse(res.sResultJsonStr)
-                })
+                if(res.sResultJsonStr==''){
+                    Toast.fail('暂无数据', 1);
+                }else{
+                    this.setState({
+                        prepareData:JSON.parse(res.sResultJsonStr)
+                    })
+                }
+                
                 console.log(this.state.prepareData,111);
             }else{
                 self.openModal(res.ErrorMessage);
@@ -216,6 +245,8 @@ class Prepare extends Component {
             spcode:'IA09-1-3-4'
         })
     }
+
+    
     //点击扫描储位输入框时，打开扫码
     scanSpCode(){
         let self=this
@@ -237,12 +268,18 @@ class Prepare extends Component {
     }
     //根据扫描到的码请求数据
     scanDataDealCode(barCode,scanStatus){
+        if(this.state.activeTrIndex==-1||this.state.activeTrIndex==null){
+            Toast.fail('请先选择条目', 1);
+            return
+        }
         Toast.loading('loading...',0);
         let prepareId=this.state.prepareData[this.state.activeTrIndex].id;
+        let Unit=this.state.prepareData[this.state.activeTrIndex]['出入库'];
+        
         let selt=this;
         let url=`http://wmspda.skyworthdigital.com:9001/webApi/api/MoveAction/scanDataDealBarCode?`
                 +`prepareId=${prepareId}&barCode=${barCode}`
-                +`&scanStatus=${scanStatus}`
+                +`&scanStatus=${scanStatus}&Unit=${Unit}`
         axios.get(url
         ).then((res)=>{
             return res.data
@@ -250,7 +287,14 @@ class Prepare extends Component {
             Toast.hide()
             if(scanStatus==1){
                 console.log(res,222111111);
-                
+                if(res.messageResult.IsSuccess){
+                    Toast.info(res.messageResult.Message,1.2)
+                    if(res.messageResult.ResultId == 100){
+                        self.state.spPrompt = true
+                    }
+                }else{
+                    Toast.info(res.messageResult.ErrorMessage?res.messageResult.ErrorMessage:'',1.2)
+                }   
             }
         }).catch(e=>{
             console.log(e)

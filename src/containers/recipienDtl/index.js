@@ -20,34 +20,39 @@ class recipienDtl extends Component {
                    onLeftClick={() => this.props.history.goBack()}>
                    收货查看
             </NavBar>
-             <div className="wmsTb">
-                <Flex className="tbHeader">
-                    <Flex.Item>PO</Flex.Item>
-                    <Flex.Item className="flex2">物料号</Flex.Item>
-                    <Flex.Item>收货数量</Flex.Item>
-                    <Flex.Item>储位</Flex.Item>
-                </Flex>
-                <div className="wmsTb_Tbody">
-                {   
-                    this.state.receiveData
-                    ?(this.state.receiveData.map((item,index)=>{
-                            return (
-                                <Flex className="tb_tr" key={index}>
-                                    <Flex.Item>{item.PO}</Flex.Item>
-                                    <Flex.Item className="flex2">{item.物料号}</Flex.Item>
-                                    <Flex.Item>{item.收货数量}</Flex.Item>
-                                    <Flex.Item>{item.储位}</Flex.Item>
-                                </Flex>
-                            )
-                        })
-                    ):(
-                        <Flex className="tb_tr">
-                            <Flex.Item style={{textAlign:'center'}}>暂无相关内容</Flex.Item>
-                        </Flex> 
-                    )
+            <div className="wmsTb_wrap">
+                <div className="wmsTb x-border">
+                        <div className="tbHeader">
+                                <div className="tb_w_sub">PO</div>
+                                <div className="tb_w_three">物料号</div>
+                                <div>收货数量</div>
+                                <div className="tb_w_sub">储位</div>
+                        </div>
+                        <div className="wmsTb_Tbody">
 
-                    
-                }
+                    {   
+                        this.state.receiveData
+                        ?(this.state.receiveData.map((item,index)=>{
+                                return (
+                                    <div className="tb_tr" key={index}>
+                                        <div className="tb_td tb_w_sub">{item.PO}</div>
+                                        <div className="tb_td tb_w_three">{item.物料号}</div>
+                                        <div className="tb_td">{item.收货数量}</div>
+                                        <div className="tb_td tb_w_three">{item.储位}</div>
+                                    </div>
+                                )
+                            })
+                        ):(
+                            [1,2,3,4,5,6].map((item,index)=>{
+                                return (
+                                    <div key={index} className='tb_tr'></div>
+                                )
+                            })
+                        )
+
+                        
+                    }
+                    </div>
                 </div>
              </div>
              <div className="bottomBar">
